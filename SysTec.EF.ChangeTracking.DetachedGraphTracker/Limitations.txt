@@ -1,0 +1,16 @@
+1. new() initializer for properties may only be used on collection types
+2. Owned collections are not supported
+3. Only int keys are supported. This behavior also translates to composite keys.
+4. Handling of db-generated values is limited to npgsql databases.
+5. Required relationship cannot be severed from the dependent side because:
+   - The foreign key is not nullable, thus setting the navigation to null is a contradiction.
+   - Severing the relationship would result in deleting the dependent, which also can be achieved by directly deleting the dependent.
+6. Only one composition node with the same key(s) and type is allowed per graph. Otherwise an exception is thrown.
+7. The [ForceDelete] functionality is limited to collection navigations
+8. [ForceUnchanged] on collection navigations only prevents relationships to be severed. New relationships can still be added.
+9. All attributes must be set on a concrete navigation property. Attributes on abstract properties are ignored.
+
+Notes:
+1. If something is a [ForceAggregation] NOTHING in the subtree can be changed (including relationships)
+2. Only the AggregationRoot (the entry/entries inside the navigation property with [ForceAggregation]) is present in the ChangeTracker
+   All other entities inside the subtree ARE NOT being traversed and thus are NOT PRESENT in the ChangeTracker!
