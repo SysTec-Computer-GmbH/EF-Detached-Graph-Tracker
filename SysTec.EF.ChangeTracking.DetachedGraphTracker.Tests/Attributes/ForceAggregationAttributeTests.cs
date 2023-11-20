@@ -2,15 +2,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using SysTec.EF.ChangeTracking.DetachedGraphTracker.Helpers;
 using SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.Attributes.Database;
-using SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.Attributes.Models.ForceAggregation.Collection;
-using SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.Attributes.Models.ForceAggregation.Reference;
+using SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.Attributes.Models.Association.Collection;
+using SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.Attributes.Models.Association.Reference;
 
 namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.Attributes;
 
-public class ForceAggregationAttributeTests : TestBase<AttributeTestsDbContext>
+public class AssociationAttributeTests : TestBase<AttributeTestsDbContext>
 {
     [Test]
-    public async Task _01_ForceAggregationAttribute_IsRecognized_OnCollection_WithBackReference_ToAbstractBaseType()
+    public async Task _01_AssociationAttribute_IsRecognized_OnCollection_WithBackReference_ToAbstractBaseType()
     {
         var concreteType = new ConcreteTypeWithConcreteCollection()
         {
@@ -58,7 +58,7 @@ public class ForceAggregationAttributeTests : TestBase<AttributeTestsDbContext>
         
         await using (var dbContext = new AttributeTestsDbContext())
         {
-            var updatedConcreteType = await dbContext.ForceAggregationConcreteCollectionTypes
+            var updatedConcreteType = await dbContext.AssociationConcreteCollectionTypes
                 .Include(o => o.Items)
                 .SingleAsync(o => o.Id == concreteType.Id);
             
@@ -68,7 +68,7 @@ public class ForceAggregationAttributeTests : TestBase<AttributeTestsDbContext>
     }
     
     [Test]
-    public async Task _02_ForceAggregationAttribute_IsRecognized_OnReference_WithBackReference_ToAbstractBaseType()
+    public async Task _02_AssociationAttribute_IsRecognized_OnReference_WithBackReference_ToAbstractBaseType()
     {
         var concreteType = new ConcreteTypeWithConcreteReference()
         {
@@ -110,7 +110,7 @@ public class ForceAggregationAttributeTests : TestBase<AttributeTestsDbContext>
         
         await using (var dbContext = new AttributeTestsDbContext())
         {
-            var updatedConcreteType = await dbContext.ForceAggregationConcreteReferenceTypes
+            var updatedConcreteType = await dbContext.AssociationConcreteReferenceTypes
                 .Include(o => o.Item)
                 .SingleAsync(o => o.Id == concreteType.Id);
             

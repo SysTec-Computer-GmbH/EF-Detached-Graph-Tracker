@@ -4,12 +4,12 @@ using SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.ConcurrencyStamps.Mode
 
 namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.ConcurrencyStamps;
 
-public class ConcurrencyStampForceAggregationTests : TestBase<ConcurrencyStampTestDbContext>
+public class ConcurrencyStampAssociationTests : TestBase<ConcurrencyStampTestDbContext>
 {
     private const string INIT_TEXT = "Text Update";
 
     [Test]
-    public async Task _01_Entity_InForceAggregationReferenceNavigation_WithValidConcurrencyStamp_IsUpdatedCorrectly()
+    public async Task _01_Entity_InAssociationReferenceNavigation_WithValidConcurrencyStamp_IsUpdatedCorrectly()
     {
         var root = await SaveItemAndCreateRootObjectAsync(true);
 
@@ -29,7 +29,7 @@ public class ConcurrencyStampForceAggregationTests : TestBase<ConcurrencyStampTe
 
     [Test]
     public async Task
-        _02_Entity_InForceAggregationReferenceNavigation_WithOutdatedConcurrencyStamp_DoesNotThrowException()
+        _02_Entity_InAssociationReferenceNavigation_WithOutdatedConcurrencyStamp_DoesNotThrowException()
     {
         var root = await SaveItemAndCreateRootObjectAsync(false);
 
@@ -47,7 +47,7 @@ public class ConcurrencyStampForceAggregationTests : TestBase<ConcurrencyStampTe
         }
     }
 
-    private async Task<RootWithConcurrencyItemInForceAggregationReference> SaveItemAndCreateRootObjectAsync(bool shouldHaveValidConcurrencyToken)
+    private async Task<RootWithConcurrencyItemInAssociationReference> SaveItemAndCreateRootObjectAsync(bool shouldHaveValidConcurrencyToken)
     {
         var item = new ItemWithConcurrencyStamp()
         {
@@ -62,7 +62,7 @@ public class ConcurrencyStampForceAggregationTests : TestBase<ConcurrencyStampTe
             Assert.That(item.ConcurrencyToken, Is.GreaterThan(0));
         }
 
-        return new RootWithConcurrencyItemInForceAggregationReference()
+        return new RootWithConcurrencyItemInAssociationReference()
         {
             ItemWithConcurrencyStamp = new ItemWithConcurrencyStamp()
             {

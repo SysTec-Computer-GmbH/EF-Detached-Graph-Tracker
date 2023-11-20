@@ -9,9 +9,9 @@ public class EntityWithPropertiesNewInitializer : IdBase
 
     public Entity? CompositionEntity { get; set; } = new();
 
-    public int? AggregationEntityId { get; set; }
+    public int? AssociationEntityId { get; set; }
 
-    [UpdateAssociationOnly] public Entity? AggregationEntity { get; set; } = new();
+    [UpdateAssociationOnly] public Entity? AssociationEntity { get; set; } = new();
 
     public string Text { get; set; }
 }

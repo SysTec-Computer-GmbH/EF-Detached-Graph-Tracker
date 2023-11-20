@@ -1,156 +1,156 @@
 using Microsoft.EntityFrameworkCore;
-using SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.ForceAggregation.Database;
-using SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.ForceAggregation.Models.Subtree;
+using SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.Association.Database;
+using SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.Association.Models.Subtree;
 
-namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.ForceAggregation;
+namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.Association;
 
-public class ForceAggregationSubtreeTests : TestBase<ForceAggregationTestsDbContext>
+public class AssociationSubtreeTests : TestBase<AssociationTestsDbContext>
 {
     [Test]
-    public async Task _01_RelationshipInsideExistingAggregation_WithinReferenceNavigation_CanNotBeModified()
+    public async Task _01_RelationshipInsideExistingAssociation_WithinReferenceNavigation_CanNotBeModified()
     {
         var root = new RootNode
         {
-            Aggregation = new AggregationRoot
+            Association = new AssociationRoot
             {
-                Text = "Aggregation"
+                Text = "Association"
             }
         };
 
-        await using (var dbContext = new ForceAggregationTestsDbContext())
+        await using (var dbContext = new AssociationTestsDbContext())
         {
             dbContext.Add(root);
             await dbContext.SaveChangesAsync();
         }
 
         var rootUpdate = (RootNode)root.Clone();
-        rootUpdate.Aggregation!.Composition = new Entity
+        rootUpdate.Association!.Composition = new Entity
         {
             Text = "Composition"
         };
 
-        await using (var dbContext = new ForceAggregationTestsDbContext())
+        await using (var dbContext = new AssociationTestsDbContext())
         {
             var graphTracker = GetGraphTrackerInstance(dbContext); await graphTracker.TrackGraphAsync(rootUpdate);
             await dbContext.SaveChangesAsync();
         }
 
-        await using (var dbContext = new ForceAggregationTestsDbContext())
+        await using (var dbContext = new AssociationTestsDbContext())
         {
             var rootFromDb = await dbContext.Set<RootNode>()
-                .Include(r => r.Aggregation)
+                .Include(r => r.Association)
                 .ThenInclude(a => a.Composition)
                 .SingleAsync(x => x.Id == root.Id);
 
-            Assert.Multiple(() => { Assert.That(rootFromDb.Aggregation!.Composition, Is.Null); });
+            Assert.Multiple(() => { Assert.That(rootFromDb.Association!.Composition, Is.Null); });
         }
 
-        var aggregationUpdate = (AggregationRoot)root.Aggregation.Clone();
-        aggregationUpdate.Composition = new Entity
+        var associationUpdate = (AssociationRoot)root.Association.Clone();
+        associationUpdate.Composition = new Entity
         {
             Text = "Composition"
         };
 
-        await using (var dbContext = new ForceAggregationTestsDbContext())
+        await using (var dbContext = new AssociationTestsDbContext())
         {
-            var graphTracker = GetGraphTrackerInstance(dbContext); await graphTracker.TrackGraphAsync(aggregationUpdate);
+            var graphTracker = GetGraphTrackerInstance(dbContext); await graphTracker.TrackGraphAsync(associationUpdate);
             await dbContext.SaveChangesAsync();
         }
 
         var rootUpdate2 = (RootNode)root.Clone();
-        rootUpdate2.Aggregation = (AggregationRoot)aggregationUpdate.Clone();
-        rootUpdate2.Aggregation.Composition = null;
+        rootUpdate2.Association = (AssociationRoot)associationUpdate.Clone();
+        rootUpdate2.Association.Composition = null;
 
-        await using (var dbContext = new ForceAggregationTestsDbContext())
+        await using (var dbContext = new AssociationTestsDbContext())
         {
             var graphTracker = GetGraphTrackerInstance(dbContext); await graphTracker.TrackGraphAsync(rootUpdate2);
             await dbContext.SaveChangesAsync();
         }
 
-        await using (var dbContext = new ForceAggregationTestsDbContext())
+        await using (var dbContext = new AssociationTestsDbContext())
         {
             var rootFromDb = await dbContext.Set<RootNode>()
-                .Include(r => r.Aggregation)
+                .Include(r => r.Association)
                 .ThenInclude(a => a.Composition)
                 .SingleAsync(x => x.Id == root.Id);
 
-            Assert.Multiple(() => { Assert.That(rootFromDb.Aggregation!.Composition, Is.Not.Null); });
+            Assert.Multiple(() => { Assert.That(rootFromDb.Association!.Composition, Is.Not.Null); });
         }
     }
 
     [Test]
-    public async Task _02_RelationshipInsideExistingAggregation_WithinCollectionNavigation_CanNotBeModified()
+    public async Task _02_RelationshipInsideExistingAssociation_WithinCollectionNavigation_CanNotBeModified()
     {
         var root = new RootNode
         {
-            Aggregations = new List<AggregationRoot>
+            Associations = new List<AssociationRoot>
             {
-                new AggregationRoot
+                new AssociationRoot
                 {
-                    Text = "Aggregation"
+                    Text = "Association"
                 }
             }
         };
 
-        await using (var dbContext = new ForceAggregationTestsDbContext())
+        await using (var dbContext = new AssociationTestsDbContext())
         {
             dbContext.Add(root);
             await dbContext.SaveChangesAsync();
         }
 
         var rootUpdate = (RootNode)root.Clone();
-        rootUpdate.Aggregations[0].Composition = new Entity
+        rootUpdate.Associations[0].Composition = new Entity
         {
             Text = "Composition"
         };
 
-        await using (var dbContext = new ForceAggregationTestsDbContext())
+        await using (var dbContext = new AssociationTestsDbContext())
         {
             var graphTracker = GetGraphTrackerInstance(dbContext); await graphTracker.TrackGraphAsync(rootUpdate);
             await dbContext.SaveChangesAsync();
         }
 
-        await using (var dbContext = new ForceAggregationTestsDbContext())
+        await using (var dbContext = new AssociationTestsDbContext())
         {
             var rootFromDb = await dbContext.Set<RootNode>()
-                .Include(r => r.Aggregations)
+                .Include(r => r.Associations)
                 .ThenInclude(a => a.Composition)
                 .SingleAsync(x => x.Id == root.Id);
 
-            Assert.Multiple(() => { Assert.That(rootFromDb.Aggregations[0].Composition, Is.Null); });
+            Assert.Multiple(() => { Assert.That(rootFromDb.Associations[0].Composition, Is.Null); });
         }
 
-        var aggregationUpdate = (AggregationRoot)root.Aggregations[0].Clone();
-        aggregationUpdate.Composition = new Entity
+        var associationUpdate = (AssociationRoot)root.Associations[0].Clone();
+        associationUpdate.Composition = new Entity
         {
             Text = "Composition"
         };
 
-        await using (var dbContext = new ForceAggregationTestsDbContext())
+        await using (var dbContext = new AssociationTestsDbContext())
         {
-            var graphTracker = GetGraphTrackerInstance(dbContext); await graphTracker.TrackGraphAsync(aggregationUpdate);
+            var graphTracker = GetGraphTrackerInstance(dbContext); await graphTracker.TrackGraphAsync(associationUpdate);
             await dbContext.SaveChangesAsync();
         }
 
         var rootUpdate2 = (RootNode)root.Clone();
-        rootUpdate2.Aggregations.Clear();
-        rootUpdate2.Aggregations.Add((AggregationRoot)aggregationUpdate.Clone());
-        rootUpdate2.Aggregations[0].Composition = null;
+        rootUpdate2.Associations.Clear();
+        rootUpdate2.Associations.Add((AssociationRoot)associationUpdate.Clone());
+        rootUpdate2.Associations[0].Composition = null;
 
-        await using (var dbContext = new ForceAggregationTestsDbContext())
+        await using (var dbContext = new AssociationTestsDbContext())
         {
             var graphTracker = GetGraphTrackerInstance(dbContext); await graphTracker.TrackGraphAsync(rootUpdate2);
             await dbContext.SaveChangesAsync();
         }
 
-        await using (var dbContext = new ForceAggregationTestsDbContext())
+        await using (var dbContext = new AssociationTestsDbContext())
         {
             var rootFromDb = await dbContext.Set<RootNode>()
-                .Include(r => r.Aggregations)
+                .Include(r => r.Associations)
                 .ThenInclude(a => a.Composition)
                 .SingleAsync(x => x.Id == root.Id);
 
-            Assert.Multiple(() => { Assert.That(rootFromDb.Aggregations[0].Composition, Is.Not.Null); });
+            Assert.Multiple(() => { Assert.That(rootFromDb.Associations[0].Composition, Is.Not.Null); });
         }
     }
 }

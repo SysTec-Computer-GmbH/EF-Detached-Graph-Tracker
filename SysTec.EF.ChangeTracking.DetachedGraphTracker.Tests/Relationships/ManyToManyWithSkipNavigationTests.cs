@@ -41,7 +41,7 @@ public class ManyToManyWithSkipNavigationTests : TestBase<RelationshipTestsDbCon
         {
             Id = manyEntityTwo.Id,
             Text = "Update",
-            EntityOneAggregations = new List<ManyEntityOne>()
+            EntityOneAssociations = new List<ManyEntityOne>()
         };
 
         await using (var dbContext = new RelationshipTestsDbContext())
@@ -97,11 +97,11 @@ public class ManyToManyWithSkipNavigationTests : TestBase<RelationshipTestsDbCon
     }
 
     [Test]
-    public async Task _03_ExistingManyToManyRelationship_TrackedInAggregation_ThrowsNoExceptionWhenSaving()
+    public async Task _03_ExistingManyToManyRelationship_TrackedInAssociation_ThrowsNoExceptionWhenSaving()
     {
-        var manyItem = new ManyEntityOneAggregation
+        var manyItem = new ManyEntityOneAssociation
         {
-            ManyAggregations = new List<ManyEntityTwoAggregation>
+            ManyAssociations = new List<ManyEntityTwoAssociation>
             {
                 new()
             }
@@ -113,14 +113,14 @@ public class ManyToManyWithSkipNavigationTests : TestBase<RelationshipTestsDbCon
             await dbContext.SaveChangesAsync();
         }
 
-        var manyItemUpdate = new ManyEntityOneAggregation
+        var manyItemUpdate = new ManyEntityOneAssociation
         {
             Id = manyItem.Id,
-            ManyAggregations = new List<ManyEntityTwoAggregation>
+            ManyAssociations = new List<ManyEntityTwoAssociation>
             {
                 new()
                 {
-                    Id = manyItem.ManyAggregations[0].Id
+                    Id = manyItem.ManyAssociations[0].Id
                 }
             }
         };
@@ -134,9 +134,9 @@ public class ManyToManyWithSkipNavigationTests : TestBase<RelationshipTestsDbCon
 
 
     [Test]
-    public async Task _04_AddingItemThatExistsInDbTo_ForceAggregation_ManyToManyCollection_AddsNewRelationship()
+    public async Task _04_AddingItemThatExistsInDbTo_Association_ManyToManyCollection_AddsNewRelationship()
     {
-        var manyItem = new ManyEntityOneAggregation();
+        var manyItem = new ManyEntityOneAssociation();
 
         await using (var dbContext = new RelationshipTestsDbContext())
         {
@@ -144,22 +144,22 @@ public class ManyToManyWithSkipNavigationTests : TestBase<RelationshipTestsDbCon
             await dbContext.SaveChangesAsync();
         }
 
-        var aggregationItemOne = new ManyEntityTwoAggregation();
+        var associationItemOne = new ManyEntityTwoAssociation();
 
         await using (var dbContext = new RelationshipTestsDbContext())
         {
-            dbContext.Add(aggregationItemOne);
+            dbContext.Add(associationItemOne);
             await dbContext.SaveChangesAsync();
         }
 
-        var manyItemUpdate = new ManyEntityOneAggregation
+        var manyItemUpdate = new ManyEntityOneAssociation
         {
             Id = manyItem.Id,
-            ManyAggregations = new List<ManyEntityTwoAggregation>
+            ManyAssociations = new List<ManyEntityTwoAssociation>
             {
                 new()
                 {
-                    Id = aggregationItemOne.Id
+                    Id = associationItemOne.Id
                 }
             }
         };
@@ -172,33 +172,33 @@ public class ManyToManyWithSkipNavigationTests : TestBase<RelationshipTestsDbCon
 
         await using (var dbContext = new RelationshipTestsDbContext())
         {
-            var manyItemFromDb = await dbContext.Set<ManyEntityOneAggregation>()
-                .Include(x => x.ManyAggregations)
+            var manyItemFromDb = await dbContext.Set<ManyEntityOneAssociation>()
+                .Include(x => x.ManyAssociations)
                 .SingleAsync(x => x.Id == manyItem.Id);
 
-            Assert.That(manyItemFromDb.ManyAggregations, Has.Count.EqualTo(1));
+            Assert.That(manyItemFromDb.ManyAssociations, Has.Count.EqualTo(1));
         }
 
-        var aggregationItemTwo = new ManyEntityTwoAggregation();
+        var associationItemTwo = new ManyEntityTwoAssociation();
 
         await using (var dbContext = new RelationshipTestsDbContext())
         {
-            dbContext.Add(aggregationItemTwo);
+            dbContext.Add(associationItemTwo);
             await dbContext.SaveChangesAsync();
         }
 
-        var manyItemUpdateTwo = new ManyEntityOneAggregation
+        var manyItemUpdateTwo = new ManyEntityOneAssociation
         {
             Id = manyItem.Id,
-            ManyAggregations = new List<ManyEntityTwoAggregation>
+            ManyAssociations = new List<ManyEntityTwoAssociation>
             {
-                new ManyEntityTwoAggregation
+                new ManyEntityTwoAssociation
                 {
-                    Id = aggregationItemOne.Id
+                    Id = associationItemOne.Id
                 },
-                new ManyEntityTwoAggregation
+                new ManyEntityTwoAssociation
                 {
-                    Id = aggregationItemTwo.Id
+                    Id = associationItemTwo.Id
                 }
             }
         };
@@ -211,11 +211,11 @@ public class ManyToManyWithSkipNavigationTests : TestBase<RelationshipTestsDbCon
 
         await using (var dbContext = new RelationshipTestsDbContext())
         {
-            var manyItemFromDb = await dbContext.Set<ManyEntityOneAggregation>()
-                .Include(x => x.ManyAggregations)
+            var manyItemFromDb = await dbContext.Set<ManyEntityOneAssociation>()
+                .Include(x => x.ManyAssociations)
                 .SingleAsync(x => x.Id == manyItem.Id);
 
-            Assert.That(manyItemFromDb.ManyAggregations, Has.Count.EqualTo(2));
+            Assert.That(manyItemFromDb.ManyAssociations, Has.Count.EqualTo(2));
         }
     }
 

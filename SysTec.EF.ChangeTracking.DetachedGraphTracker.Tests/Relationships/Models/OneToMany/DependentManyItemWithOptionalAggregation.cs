@@ -3,7 +3,7 @@ using SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.SharedModels;
 
 namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.Relationships.Models.OneToMany;
 
-public class DependentManyItemWithOptionalAggregation : IdBase
+public class DependentManyItemWithOptionalAssociation : IdBase
 {
-    [UpdateAssociationOnly] public OneItem? OptionalAggregation { get; set; }
+    [UpdateAssociationOnly] public OneItem? OptionalAssociation { get; set; }
 }

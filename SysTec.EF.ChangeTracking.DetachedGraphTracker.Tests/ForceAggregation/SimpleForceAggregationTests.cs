@@ -1,167 +1,167 @@
 using Microsoft.EntityFrameworkCore;
-using SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.ForceAggregation.Database;
-using SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.ForceAggregation.Models;
+using SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.Association.Database;
+using SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.Association.Models;
 
-namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.ForceAggregation;
+namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.Association;
 
-public class SimpleForceAggregationTests : TestBase<ForceAggregationTestsDbContext>
+public class SimpleAssociationTests : TestBase<AssociationTestsDbContext>
 {
     [Test]
-    public async Task _01_ForceAggregationInReferenceNavigation_WithoutPreviousCompositionInChangeTracker()
+    public async Task _01_AssociationInReferenceNavigation_WithoutPreviousCompositionInChangeTracker()
     {
-        var aggregationEntity = new AggregationType
+        var associationEntity = new AssociationType
         {
-            Text = "AggregationType_1"
+            Text = "AssociationType_1"
         };
 
-        await using (var dbContext = new ForceAggregationTestsDbContext())
+        await using (var dbContext = new AssociationTestsDbContext())
         {
-            dbContext.Add(aggregationEntity);
+            dbContext.Add(associationEntity);
             await dbContext.SaveChangesAsync();
         }
 
-        var rootNode = new ForceAggregationRootNode
+        var rootNode = new AssociationRootNode
         {
-            Text = "Aggregation Root",
-            AggregationTypeReference = new AggregationType
+            Text = "Association Root",
+            AssociationTypeReference = new AssociationType
             {
-                Id = aggregationEntity.Id,
-                Text = "UpdatedAggregationType_1"
+                Id = associationEntity.Id,
+                Text = "UpdatedAssociationType_1"
             }
         };
 
-        await using (var dbContext = new ForceAggregationTestsDbContext())
+        await using (var dbContext = new AssociationTestsDbContext())
         {
             var graphTracker = GetGraphTrackerInstance(dbContext); await graphTracker.TrackGraphAsync(rootNode);
             await dbContext.SaveChangesAsync();
         }
 
-        await using (var dbContext = new ForceAggregationTestsDbContext())
+        await using (var dbContext = new AssociationTestsDbContext())
         {
-            var forceAggregationEntityFromDb = await dbContext
-                .Set<AggregationType>()
-                .SingleAsync(at => at.Id == aggregationEntity.Id);
+            var forceAssociationEntityFromDb = await dbContext
+                .Set<AssociationType>()
+                .SingleAsync(at => at.Id == associationEntity.Id);
 
-            Assert.That(forceAggregationEntityFromDb.Text, Is.EqualTo(aggregationEntity.Text));
+            Assert.That(forceAssociationEntityFromDb.Text, Is.EqualTo(associationEntity.Text));
         }
 
-        await using (var dbContext = new ForceAggregationTestsDbContext())
+        await using (var dbContext = new AssociationTestsDbContext())
         {
-            var rootNodeFromDb = await dbContext.ForceAggregationRootNodes
-                .Include(x => x.AggregationTypeReference)
+            var rootNodeFromDb = await dbContext.AssociationRootNodes
+                .Include(x => x.AssociationTypeReference)
                 .FirstOrDefaultAsync(x => x.Id == rootNode.Id);
 
             Assert.Multiple(() =>
             {
                 Assert.That(rootNodeFromDb.Text, Is.EqualTo(rootNode.Text));
-                Assert.That(rootNodeFromDb.AggregationTypeReference, Is.Not.Null);
-                Assert.That(rootNodeFromDb.AggregationTypeReference.Text, Is.EqualTo(aggregationEntity.Text));
+                Assert.That(rootNodeFromDb.AssociationTypeReference, Is.Not.Null);
+                Assert.That(rootNodeFromDb.AssociationTypeReference.Text, Is.EqualTo(associationEntity.Text));
             });
         }
     }
 
     [Test]
     public async Task
-        _02_ForceAggregationInCollectionNavigation_WithoutPreviousCompositionInChangeTracker()
+        _02_AssociationInCollectionNavigation_WithoutPreviousCompositionInChangeTracker()
     {
-        var aggregationEntity1 = new AggregationType
+        var associationEntity1 = new AssociationType
         {
-            Text = "AggregationType_1"
+            Text = "AssociationType_1"
         };
 
-        var aggregationEntity2 = new AggregationType
+        var associationEntity2 = new AssociationType
         {
-            Text = "AggregationType_2"
+            Text = "AssociationType_2"
         };
 
-        await using (var dbContext = new ForceAggregationTestsDbContext())
+        await using (var dbContext = new AssociationTestsDbContext())
         {
-            dbContext.AddRange(aggregationEntity1, aggregationEntity2);
+            dbContext.AddRange(associationEntity1, associationEntity2);
             await dbContext.SaveChangesAsync();
         }
 
-        var rootNode = new ForceAggregationRootNode
+        var rootNode = new AssociationRootNode
         {
-            Text = "Aggregation Root",
-            AggregationTypeCollection = new List<AggregationType>
+            Text = "Association Root",
+            AssociationTypeCollection = new List<AssociationType>
             {
                 new()
                 {
-                    Id = aggregationEntity1.Id,
-                    Text = "UpdatedAggregationType_1"
+                    Id = associationEntity1.Id,
+                    Text = "UpdatedAssociationType_1"
                 },
                 new()
                 {
-                    Id = aggregationEntity2.Id,
-                    Text = "UpdatedAggregationType_2"
+                    Id = associationEntity2.Id,
+                    Text = "UpdatedAssociationType_2"
                 }
             }
         };
 
-        await using (var dbContext = new ForceAggregationTestsDbContext())
+        await using (var dbContext = new AssociationTestsDbContext())
         {
             var graphTracker = GetGraphTrackerInstance(dbContext); 
             await graphTracker.TrackGraphAsync(rootNode);
             await dbContext.SaveChangesAsync();
         }
 
-        await using (var dbContext = new ForceAggregationTestsDbContext())
+        await using (var dbContext = new AssociationTestsDbContext())
         {
-            var aggregationEntity1FromDb = await dbContext
-                .Set<AggregationType>()
-                .SingleAsync(at => at.Id == aggregationEntity1.Id);
+            var associationEntity1FromDb = await dbContext
+                .Set<AssociationType>()
+                .SingleAsync(at => at.Id == associationEntity1.Id);
 
-            Assert.That(aggregationEntity1FromDb.Text, Is.EqualTo(aggregationEntity1.Text));
+            Assert.That(associationEntity1FromDb.Text, Is.EqualTo(associationEntity1.Text));
 
-            var aggregationEntity2FromDb = await dbContext
-                .Set<AggregationType>()
-                .SingleAsync(at => at.Id == aggregationEntity2.Id);
+            var associationEntity2FromDb = await dbContext
+                .Set<AssociationType>()
+                .SingleAsync(at => at.Id == associationEntity2.Id);
 
-            Assert.That(aggregationEntity2FromDb.Text, Is.EqualTo(aggregationEntity2.Text));
+            Assert.That(associationEntity2FromDb.Text, Is.EqualTo(associationEntity2.Text));
         }
 
-        await using (var dbContext = new ForceAggregationTestsDbContext())
+        await using (var dbContext = new AssociationTestsDbContext())
         {
-            var rootNodeFromDb = await dbContext.ForceAggregationRootNodes
-                .Include(x => x.AggregationTypeCollection)
+            var rootNodeFromDb = await dbContext.AssociationRootNodes
+                .Include(x => x.AssociationTypeCollection)
                 .FirstOrDefaultAsync(x => x.Id == rootNode.Id);
 
             Assert.Multiple(() =>
             {
-                Assert.That(rootNodeFromDb!.AggregationTypeCollection, Has.Count.EqualTo(2));
-                Assert.That(rootNodeFromDb.AggregationTypeCollection[0].Text, Is.EqualTo(aggregationEntity1.Text));
-                Assert.That(rootNodeFromDb.AggregationTypeCollection[1].Text, Is.EqualTo(aggregationEntity2.Text));
+                Assert.That(rootNodeFromDb!.AssociationTypeCollection, Has.Count.EqualTo(2));
+                Assert.That(rootNodeFromDb.AssociationTypeCollection[0].Text, Is.EqualTo(associationEntity1.Text));
+                Assert.That(rootNodeFromDb.AssociationTypeCollection[1].Text, Is.EqualTo(associationEntity2.Text));
             });
         }
 
-        var rootNodeUpdate = new ForceAggregationRootNode()
+        var rootNodeUpdate = new AssociationRootNode()
         {
             Text = rootNode.Text,
-            AggregationTypeCollection = new()
+            AssociationTypeCollection = new()
             {
                 new()
                 {
-                    Id = rootNode.AggregationTypeCollection.First().Id
+                    Id = rootNode.AssociationTypeCollection.First().Id
                 }
             }
         };
         
-        await using (var dbContext = new ForceAggregationTestsDbContext())
+        await using (var dbContext = new AssociationTestsDbContext())
         {
             var graphTracker = GetGraphTrackerInstance(dbContext); 
             await graphTracker.TrackGraphAsync(rootNodeUpdate);
             await dbContext.SaveChangesAsync();
         }
         
-        await using (var dbContext = new ForceAggregationTestsDbContext())
+        await using (var dbContext = new AssociationTestsDbContext())
         {
-            var rootNodeFromDb = await dbContext.ForceAggregationRootNodes
-                .Include(x => x.AggregationTypeCollection)
+            var rootNodeFromDb = await dbContext.AssociationRootNodes
+                .Include(x => x.AssociationTypeCollection)
                 .FirstOrDefaultAsync(x => x.Id == rootNode.Id);
 
             Assert.Multiple(() =>
             {
-                Assert.That(rootNodeFromDb!.AggregationTypeCollection, Has.Count.EqualTo(1)); 
+                Assert.That(rootNodeFromDb!.AssociationTypeCollection, Has.Count.EqualTo(1)); 
             });
         }
     }

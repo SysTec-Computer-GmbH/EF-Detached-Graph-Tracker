@@ -61,21 +61,21 @@ public class OneToManyTests : TestBase<RelationshipTestsDbContext>
     }
 
     [Test]
-    public async Task _03_SetNull_OnReferenceNavigation_ForRequiredOneToManyAggregationRelationship_DoesNothing()
+    public async Task _03_SetNull_OnReferenceNavigation_ForRequiredOneToManyAssociationRelationship_DoesNothing()
     {
-        var aggregationItem = new OneItem();
+        var associationItem = new OneItem();
 
         await using (var dbContext = new RelationshipTestsDbContext())
         {
-            dbContext.Add(aggregationItem);
+            dbContext.Add(associationItem);
             await dbContext.SaveChangesAsync();
         }
 
-        var manyItem = new DependentManyItemWithRequiredAggregation
+        var manyItem = new DependentManyItemWithRequiredAssociation
         {
-            RequiredAggregation = new OneItem
+            RequiredAssociation = new OneItem
             {
-                Id = aggregationItem.Id
+                Id = associationItem.Id
             }
         };
 
@@ -85,10 +85,10 @@ public class OneToManyTests : TestBase<RelationshipTestsDbContext>
             await dbContext.SaveChangesAsync();
         }
 
-        var manyItemUpdate = new DependentManyItemWithRequiredAggregation
+        var manyItemUpdate = new DependentManyItemWithRequiredAssociation
         {
             Id = manyItem.Id,
-            RequiredAggregation = null
+            RequiredAssociation = null
         };
 
         await using (var dbContext = new RelationshipTestsDbContext())
@@ -99,12 +99,12 @@ public class OneToManyTests : TestBase<RelationshipTestsDbContext>
 
         await using (var dbContext = new RelationshipTestsDbContext())
         {
-            var manyItemFromDb = await dbContext.Set<DependentManyItemWithRequiredAggregation>()
-                .Include(i => i.RequiredAggregation)
+            var manyItemFromDb = await dbContext.Set<DependentManyItemWithRequiredAssociation>()
+                .Include(i => i.RequiredAssociation)
                 .SingleOrDefaultAsync(i => i.Id == manyItem.Id);
 
             Assert.That(manyItemFromDb, Is.Not.Null);
-            Assert.That(manyItemFromDb!.RequiredAggregation, Is.Not.Null);
+            Assert.That(manyItemFromDb!.RequiredAssociation, Is.Not.Null);
         }
     }
 
@@ -154,21 +154,21 @@ public class OneToManyTests : TestBase<RelationshipTestsDbContext>
     }
 
     [Test]
-    public async Task _05_SetNull_OnReferenceNavigation_ForOptionalOneToManyAggregationRelationship_SeversRelationship()
+    public async Task _05_SetNull_OnReferenceNavigation_ForOptionalOneToManyAssociationRelationship_SeversRelationship()
     {
-        var aggregationItem = new OneItem();
+        var associationItem = new OneItem();
 
         await using (var dbContext = new RelationshipTestsDbContext())
         {
-            dbContext.Add(aggregationItem);
+            dbContext.Add(associationItem);
             await dbContext.SaveChangesAsync();
         }
 
-        var manyItem = new DependentManyItemWithOptionalAggregation
+        var manyItem = new DependentManyItemWithOptionalAssociation
         {
-            OptionalAggregation = new OneItem
+            OptionalAssociation = new OneItem
             {
-                Id = aggregationItem.Id
+                Id = associationItem.Id
             }
         };
 
@@ -178,10 +178,10 @@ public class OneToManyTests : TestBase<RelationshipTestsDbContext>
             await dbContext.SaveChangesAsync();
         }
 
-        var manyItemUpdate = new DependentManyItemWithOptionalAggregation
+        var manyItemUpdate = new DependentManyItemWithOptionalAssociation
         {
             Id = manyItem.Id,
-            OptionalAggregation = null
+            OptionalAssociation = null
         };
 
         await using (var dbContext = new RelationshipTestsDbContext())
@@ -192,18 +192,18 @@ public class OneToManyTests : TestBase<RelationshipTestsDbContext>
 
         await using (var dbContext = new RelationshipTestsDbContext())
         {
-            var manyItemFromDb = await dbContext.Set<DependentManyItemWithOptionalAggregation>()
-                .Include(i => i.OptionalAggregation)
+            var manyItemFromDb = await dbContext.Set<DependentManyItemWithOptionalAssociation>()
+                .Include(i => i.OptionalAssociation)
                 .SingleOrDefaultAsync(i => i.Id == manyItem.Id);
 
             Assert.That(manyItemFromDb, Is.Not.Null);
-            Assert.That(manyItemFromDb!.OptionalAggregation, Is.Null);
+            Assert.That(manyItemFromDb!.OptionalAssociation, Is.Null);
         }
 
         await using (var dbContext = new RelationshipTestsDbContext())
         {
             var oneItemFromDb = await dbContext.Set<OneItem>()
-                .SingleOrDefaultAsync(i => i.Id == manyItem.OptionalAggregation.Id);
+                .SingleOrDefaultAsync(i => i.Id == manyItem.OptionalAssociation.Id);
 
             Assert.That(oneItemFromDb, Is.Not.Null);
         }
@@ -258,22 +258,22 @@ public class OneToManyTests : TestBase<RelationshipTestsDbContext>
 
     [Test]
     public async Task
-        _06_SetNull_WithNotNullValueInFk_OnReferenceNavigation_ForOptionalOneToManyAggregationRelationship_UsesFkValueOnly()
+        _06_SetNull_WithNotNullValueInFk_OnReferenceNavigation_ForOptionalOneToManyAssociationRelationship_UsesFkValueOnly()
     {
-        var aggregationItem = new OneItem();
+        var associationItem = new OneItem();
 
         await using (var dbContext = new RelationshipTestsDbContext())
         {
-            dbContext.Add(aggregationItem);
+            dbContext.Add(associationItem);
             await dbContext.SaveChangesAsync();
         }
 
-        var manyItem = new DependentManyItemWithDefinedFkOptionalAggregation
+        var manyItem = new DependentManyItemWithDefinedFkOptionalAssociation
         {
-            OptionalAggregationId = aggregationItem.Id,
-            OptionalAggregation = new OneItem
+            OptionalAssociationId = associationItem.Id,
+            OptionalAssociation = new OneItem
             {
-                Id = aggregationItem.Id
+                Id = associationItem.Id
             }
         };
 
@@ -283,11 +283,11 @@ public class OneToManyTests : TestBase<RelationshipTestsDbContext>
             await dbContext.SaveChangesAsync();
         }
 
-        var manyItemUpdate = new DependentManyItemWithDefinedFkOptionalAggregation
+        var manyItemUpdate = new DependentManyItemWithDefinedFkOptionalAssociation
         {
             Id = manyItem.Id,
-            OptionalAggregationId = aggregationItem.Id,
-            OptionalAggregation = null
+            OptionalAssociationId = associationItem.Id,
+            OptionalAssociation = null
         };
 
         await using (var dbContext = new RelationshipTestsDbContext())
@@ -298,18 +298,18 @@ public class OneToManyTests : TestBase<RelationshipTestsDbContext>
 
         await using (var dbContext = new RelationshipTestsDbContext())
         {
-            var manyItemFromDb = await dbContext.Set<DependentManyItemWithDefinedFkOptionalAggregation>()
-                .Include(i => i.OptionalAggregation)
+            var manyItemFromDb = await dbContext.Set<DependentManyItemWithDefinedFkOptionalAssociation>()
+                .Include(i => i.OptionalAssociation)
                 .SingleOrDefaultAsync(i => i.Id == manyItem.Id);
 
             Assert.That(manyItemFromDb, Is.Not.Null);
-            Assert.That(manyItemFromDb!.OptionalAggregation, Is.Not.Null);
+            Assert.That(manyItemFromDb!.OptionalAssociation, Is.Not.Null);
         }
 
         await using (var dbContext = new RelationshipTestsDbContext())
         {
             var oneItemFromDb = await dbContext.Set<OneItem>()
-                .SingleOrDefaultAsync(i => i.Id == manyItem.OptionalAggregation.Id);
+                .SingleOrDefaultAsync(i => i.Id == manyItem.OptionalAssociation.Id);
 
             Assert.That(oneItemFromDb, Is.Not.Null);
         }

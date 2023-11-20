@@ -15,8 +15,8 @@ public class RelationshipTestsDbContext : DbContextBase
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<DependentManyItemWithRequiredAggregation>()
-            .HasOne(mi => mi.RequiredAggregation)
+        modelBuilder.Entity<DependentManyItemWithRequiredAssociation>()
+            .HasOne(mi => mi.RequiredAssociation)
             .WithMany()
             .IsRequired();
 
@@ -36,15 +36,15 @@ public class RelationshipTestsDbContext : DbContextBase
             .HasForeignKey(i => i.OptionalCompositionId)
             .IsRequired(false);
 
-        modelBuilder.Entity<DependentManyItemWithOptionalAggregation>()
-            .HasOne(mi => mi.OptionalAggregation)
+        modelBuilder.Entity<DependentManyItemWithOptionalAssociation>()
+            .HasOne(mi => mi.OptionalAssociation)
             .WithMany()
             .IsRequired(false);
 
-        modelBuilder.Entity<DependentManyItemWithDefinedFkOptionalAggregation>()
-            .HasOne(mi => mi.OptionalAggregation)
+        modelBuilder.Entity<DependentManyItemWithDefinedFkOptionalAssociation>()
+            .HasOne(mi => mi.OptionalAssociation)
             .WithMany()
-            .HasForeignKey(mi => mi.OptionalAggregationId)
+            .HasForeignKey(mi => mi.OptionalAssociationId)
             .IsRequired(false);
 
         modelBuilder.Entity<DependentItemWithRequiredComposition>()
@@ -53,10 +53,10 @@ public class RelationshipTestsDbContext : DbContextBase
             .HasForeignKey<DependentItemWithRequiredComposition>()
             .IsRequired();
 
-        modelBuilder.Entity<DependentItemWithRequiredAggregation>()
+        modelBuilder.Entity<DependentItemWithRequiredAssociation>()
             .HasOne(i => i.RequiredPrincipal)
             .WithOne(pi => pi.OptionalDependent)
-            .HasForeignKey<DependentItemWithRequiredAggregation>()
+            .HasForeignKey<DependentItemWithRequiredAssociation>()
             .IsRequired();
 
         modelBuilder.Entity<RootNode>()
@@ -65,10 +65,10 @@ public class RelationshipTestsDbContext : DbContextBase
 
         modelBuilder.Entity<ManyEntityOne>()
             .HasMany(o => o.ManyCompositions)
-            .WithMany(t => t.EntityOneAggregations);
+            .WithMany(t => t.EntityOneAssociations);
 
-        modelBuilder.Entity<ManyEntityOneAggregation>()
-            .HasMany(o => o.ManyAggregations)
+        modelBuilder.Entity<ManyEntityOneAssociation>()
+            .HasMany(o => o.ManyAssociations)
             .WithMany();
     }
 }

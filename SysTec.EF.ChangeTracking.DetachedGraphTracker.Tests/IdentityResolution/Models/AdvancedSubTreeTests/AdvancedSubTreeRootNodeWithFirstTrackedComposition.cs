@@ -9,16 +9,16 @@ public class AdvancedSubTreeRootNodeWithFirstTrackedComposition : IdBase, IClone
 
     public AdvancedSubTreeNode1? A_CompositionNode { get; set; }
 
-    [UpdateAssociationOnly] public AdvancedSubTreeNode1? B_AggregationNode { get; set; }
+    [UpdateAssociationOnly] public AdvancedSubTreeNode1? B_AssociationNode { get; set; }
 
-    [UpdateAssociationOnly] public List<AdvancedSubTreeNode1> B_AggregationNodes { get; set; } = new();
+    [UpdateAssociationOnly] public List<AdvancedSubTreeNode1> B_AssociationNodes { get; set; } = new();
 
     public object Clone()
     {
         var clone = (AdvancedSubTreeRootNodeWithFirstTrackedComposition)MemberwiseClone();
         clone.A_CompositionNode = (AdvancedSubTreeNode1?)A_CompositionNode?.Clone();
-        clone.B_AggregationNode = (AdvancedSubTreeNode1?)B_AggregationNode?.Clone();
-        clone.B_AggregationNodes = B_AggregationNodes.Select(x => (AdvancedSubTreeNode1)x.Clone()).ToList();
+        clone.B_AssociationNode = (AdvancedSubTreeNode1?)B_AssociationNode?.Clone();
+        clone.B_AssociationNodes = B_AssociationNodes.Select(x => (AdvancedSubTreeNode1)x.Clone()).ToList();
         return clone;
     }
 }

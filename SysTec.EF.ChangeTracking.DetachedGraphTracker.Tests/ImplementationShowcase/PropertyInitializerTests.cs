@@ -13,7 +13,7 @@ public class PropertyInitializerTests : TestBase<ImplementationShowcaseTestsDbCo
         var entity = new EntityWithPropertiesNewInitializer
         {
             Text = "Text",
-            AggregationEntity = null
+            AssociationEntity = null
         };
 
         await using (var dbContext = new ImplementationShowcaseTestsDbContext())
@@ -33,10 +33,10 @@ public class PropertyInitializerTests : TestBase<ImplementationShowcaseTestsDbCo
     }
 
     [Test]
-    public async Task _02_EmptyAggregationNavigation_WithNullAsForeignKey_DoesPersistEntityInDb()
+    public async Task _02_EmptyAssociationNavigation_WithNullAsForeignKey_DoesPersistEntityInDb()
     {
-        // In this case the entity is not created in the database because the key of the aggregation entity is 0.
-        // Aggregations with a key of 0 throw an exception when no further parameter is passed to the ForceAggregation Attribute.
+        // In this case the entity is not created in the database because the key of the association entity is 0.
+        // Associations with a key of 0 throw an exception when no further parameter is passed to the Association Attribute.
 
         var entity = new EntityWithPropertiesNewInitializer
         {
@@ -53,10 +53,10 @@ public class PropertyInitializerTests : TestBase<ImplementationShowcaseTestsDbCo
 
         await using (var dbContext = new ImplementationShowcaseTestsDbContext())
         {
-            var aggregationEntityFromDb = await dbContext.Set<Entity>()
+            var associationEntityFromDb = await dbContext.Set<Entity>()
                 .SingleOrDefaultAsync();
 
-            Assert.That(aggregationEntityFromDb, Is.Null);
+            Assert.That(associationEntityFromDb, Is.Null);
         }
     }
 }

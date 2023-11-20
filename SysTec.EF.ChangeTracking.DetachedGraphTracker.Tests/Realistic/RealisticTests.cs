@@ -95,7 +95,7 @@ public class RealisticTests
     }
 
     [Test]
-    public async Task IdentityResolution_ForAggregationsInLists_AreWorking()
+    public async Task IdentityResolution_ForAssociationsInLists_AreWorking()
     {
         const string mainSectionName = "Main Section";
         var offer = new Offer
@@ -337,7 +337,7 @@ public class RealisticTests
     }
 
     [Test]
-    public async Task ForceAggregations_ForLists_AreWorking()
+    public async Task Associations_ForLists_AreWorking()
     {
         const string nameJohnInit = "John";
         const string nameJohnUpdated = "John Doe";
@@ -394,7 +394,7 @@ public class RealisticTests
                 },
                 new()
                 {
-                    Name = "This should not be persisted because the list is marked as ForceAggregation"
+                    Name = "This should not be persisted because the list is marked as Association"
                 }
             }
         };
@@ -425,7 +425,7 @@ public class RealisticTests
     }
 
     [Test]
-    public async Task ForceAggregations_ForNormalNavigations_AreWorking()
+    public async Task Associations_ForNormalNavigations_AreWorking()
     {
         const string nameDepartmentInit = "Software Development";
         const string nameDepartmentUpdated = "Software Engineering";
@@ -513,7 +513,7 @@ public class RealisticTests
                 Customer = new Customer
                 {
                     Id = offer.Customer.Id,
-                    Name = "String change not be persisted because of ForceAggregation"
+                    Name = "String change not be persisted because of Association"
                 }
             }
         };

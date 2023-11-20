@@ -7,7 +7,7 @@ namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.IdentityResolution
 public class ReferenceNavigationIdentityResolutionTests : TestBase<IdentityResolutionTestsDbContext>
 {
     [Test]
-    public async Task _01_TestIdentityResolution_ForReferenceNavigationAggregation_AndExistingComposition()
+    public async Task _01_TestIdentityResolution_ForReferenceNavigationAssociation_AndExistingComposition()
     {
         var rootNode = new RootNodeWithFirstTrackedCompositionCollection
         {
@@ -67,9 +67,9 @@ public class ReferenceNavigationIdentityResolutionTests : TestBase<IdentityResol
     }
 
     [Test]
-    public async Task _02_TestIdentityResolution_ForReferenceNavigationAggregation_AndExistingComposition()
+    public async Task _02_TestIdentityResolution_ForReferenceNavigationAssociation_AndExistingComposition()
     {
-        var rootNode = new RootNodeWithFirstTrackedAggregationReference
+        var rootNode = new RootNodeWithFirstTrackedAssociationReference
         {
             B_Tracked_Item = new TrackedItem
             {
@@ -83,7 +83,7 @@ public class ReferenceNavigationIdentityResolutionTests : TestBase<IdentityResol
             await dbContext.SaveChangesAsync();
         }
 
-        var rootNodeUpdate = (RootNodeWithFirstTrackedAggregationReference)rootNode.Clone();
+        var rootNodeUpdate = (RootNodeWithFirstTrackedAssociationReference)rootNode.Clone();
         rootNodeUpdate.A_Tracked_Item = new TrackedItem
         {
             Id = rootNode.B_Tracked_Item.Id,
@@ -100,7 +100,7 @@ public class ReferenceNavigationIdentityResolutionTests : TestBase<IdentityResol
         await using (var dbContext = new IdentityResolutionTestsDbContext())
         {
             var rootNodeFromDb = await dbContext
-                .RootNodesWithFirstTrackedAggregationReferences
+                .RootNodesWithFirstTrackedAssociationReferences
                 .Include(r => r.A_Tracked_Item)
                 .Include(r => r.B_Tracked_Item)
                 .SingleAsync();
@@ -115,11 +115,11 @@ public class ReferenceNavigationIdentityResolutionTests : TestBase<IdentityResol
     }
 
     [Test]
-    public async Task _03_TestIdentityResolution_ForReferenceNavigationComposition_AndExistingReferenceAggregation()
+    public async Task _03_TestIdentityResolution_ForReferenceNavigationComposition_AndExistingReferenceAssociation()
     {
         var subTreeComposition = DataHelper.GetSubTreeRootNode(DataHelper.COMPOSITION_NAME);
 
-        var rootNode = new RootNodeWithFirstTrackedAggregationReferenceAndSubtree
+        var rootNode = new RootNodeWithFirstTrackedAssociationReferenceAndSubtree
         {
             B_Item = subTreeComposition
         };
@@ -130,18 +130,18 @@ public class ReferenceNavigationIdentityResolutionTests : TestBase<IdentityResol
             await dbContext.SaveChangesAsync();
         }
 
-        var subTreeAggregation = (SubTreeRootNode)subTreeComposition.Clone();
-        subTreeAggregation.Text = $"SubTree {DataHelper.AGGREGATION_NAME} Root";
-        subTreeAggregation.ReferenceItem.Text = $"SubTree {DataHelper.AGGREGATION_NAME} Item";
-        subTreeAggregation.ReferenceItem.SubTreeChildItems[0].Text =
-            $"SubTree {DataHelper.AGGREGATION_NAME} Item Child 1";
-        subTreeAggregation.ReferenceItem.SubTreeChildItems[1].Text =
-            $"SubTree {DataHelper.AGGREGATION_NAME} Item Child 2";
-        subTreeAggregation.SubTreeListItems[0].Text = $"SubTree List {DataHelper.AGGREGATION_NAME} Item 1";
-        subTreeAggregation.SubTreeListItems[0].Text = $"SubTree List {DataHelper.AGGREGATION_NAME} Item 2";
+        var subTreeAssociation = (SubTreeRootNode)subTreeComposition.Clone();
+        subTreeAssociation.Text = $"SubTree {DataHelper.ASSOCIATION_NAME} Root";
+        subTreeAssociation.ReferenceItem.Text = $"SubTree {DataHelper.ASSOCIATION_NAME} Item";
+        subTreeAssociation.ReferenceItem.SubTreeChildItems[0].Text =
+            $"SubTree {DataHelper.ASSOCIATION_NAME} Item Child 1";
+        subTreeAssociation.ReferenceItem.SubTreeChildItems[1].Text =
+            $"SubTree {DataHelper.ASSOCIATION_NAME} Item Child 2";
+        subTreeAssociation.SubTreeListItems[0].Text = $"SubTree List {DataHelper.ASSOCIATION_NAME} Item 1";
+        subTreeAssociation.SubTreeListItems[0].Text = $"SubTree List {DataHelper.ASSOCIATION_NAME} Item 2";
 
-        var rootNodeUpdate = (RootNodeWithFirstTrackedAggregationReferenceAndSubtree)rootNode.Clone();
-        rootNodeUpdate.A_Item = subTreeAggregation;
+        var rootNodeUpdate = (RootNodeWithFirstTrackedAssociationReferenceAndSubtree)rootNode.Clone();
+        rootNodeUpdate.A_Item = subTreeAssociation;
 
         await using (var dbContext = new IdentityResolutionTestsDbContext())
         {
@@ -151,7 +151,7 @@ public class ReferenceNavigationIdentityResolutionTests : TestBase<IdentityResol
 
         await using (var dbContext = new IdentityResolutionTestsDbContext())
         {
-            var rootNodeFromDb = await dbContext.RootNodeWithFirstTrackedAggregationReferencesAndSubtrees.SingleAsync();
+            var rootNodeFromDb = await dbContext.RootNodeWithFirstTrackedAssociationReferencesAndSubtrees.SingleAsync();
             Assert.Multiple(() =>
             {
                 Assert.That(rootNodeFromDb.A_Item, Is.Not.Null);
@@ -177,20 +177,20 @@ public class ReferenceNavigationIdentityResolutionTests : TestBase<IdentityResol
         }
     }
 
-    private void AssertThatTreeValuesAreCompositionValues(SubTreeRootNode aggregationTreeRootNode)
+    private void AssertThatTreeValuesAreCompositionValues(SubTreeRootNode associationTreeRootNode)
     {
         Assert.Multiple(() =>
         {
-            Assert.That(aggregationTreeRootNode.Text, Is.EqualTo($"SubTree {DataHelper.COMPOSITION_NAME} Root"));
-            Assert.That(aggregationTreeRootNode.ReferenceItem.Text,
+            Assert.That(associationTreeRootNode.Text, Is.EqualTo($"SubTree {DataHelper.COMPOSITION_NAME} Root"));
+            Assert.That(associationTreeRootNode.ReferenceItem.Text,
                 Is.EqualTo($"SubTree {DataHelper.COMPOSITION_NAME} Item"));
-            Assert.That(aggregationTreeRootNode.ReferenceItem.SubTreeChildItems[0].Text,
+            Assert.That(associationTreeRootNode.ReferenceItem.SubTreeChildItems[0].Text,
                 Is.EqualTo($"SubTree {DataHelper.COMPOSITION_NAME} Item Child 1"));
-            Assert.That(aggregationTreeRootNode.ReferenceItem.SubTreeChildItems[1].Text,
+            Assert.That(associationTreeRootNode.ReferenceItem.SubTreeChildItems[1].Text,
                 Is.EqualTo($"SubTree {DataHelper.COMPOSITION_NAME} Item Child 2"));
-            Assert.That(aggregationTreeRootNode.SubTreeListItems[0].Text,
+            Assert.That(associationTreeRootNode.SubTreeListItems[0].Text,
                 Is.EqualTo($"SubTree List {DataHelper.COMPOSITION_NAME} Item 1"));
-            Assert.That(aggregationTreeRootNode.SubTreeListItems[1].Text,
+            Assert.That(associationTreeRootNode.SubTreeListItems[1].Text,
                 Is.EqualTo($"SubTree List {DataHelper.COMPOSITION_NAME} Item 2"));
         });
     }

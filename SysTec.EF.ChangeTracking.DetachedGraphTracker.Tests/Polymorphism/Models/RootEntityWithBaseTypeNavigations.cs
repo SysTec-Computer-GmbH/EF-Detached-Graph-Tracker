@@ -9,19 +9,19 @@ public class RootEntityWithBaseTypeNavigations : IdBase, ICloneable
 
     public BaseEntity? CompositionItem { get; set; }
 
-    [UpdateAssociationOnly] public BaseEntity? AggregationItem { get; set; }
+    [UpdateAssociationOnly] public BaseEntity? AssociationItem { get; set; }
 
     public List<BaseEntity> CompositionItems { get; set; } = new();
 
-    [UpdateAssociationOnly] public List<BaseEntity> AggregationItems { get; set; } = new();
+    [UpdateAssociationOnly] public List<BaseEntity> AssociationItems { get; set; } = new();
 
     public object Clone()
     {
         var clone = (RootEntityWithBaseTypeNavigations)MemberwiseClone();
         clone.CompositionItem = (BaseEntity)CompositionItem?.Clone();
-        clone.AggregationItem = (BaseEntity)AggregationItem?.Clone();
+        clone.AssociationItem = (BaseEntity)AssociationItem?.Clone();
         clone.CompositionItems = CompositionItems.Select(x => (BaseEntity)x.Clone()).ToList();
-        clone.AggregationItems = AggregationItems.Select(x => (BaseEntity)x.Clone()).ToList();
+        clone.AssociationItems = AssociationItems.Select(x => (BaseEntity)x.Clone()).ToList();
         return clone;
     }
 }

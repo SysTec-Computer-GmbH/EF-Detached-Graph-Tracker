@@ -1,6 +1,6 @@
 using SysTec.EF.ChangeTracking.DetachedGraphTracker.Attributes;
 
-namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.Attributes.Models.ForceAggregation.Reference;
+namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.Attributes.Models.Association.Reference;
 
 public class ConcreteTypeWithConcreteReference : AbstractTypeWithAbstractReference
 {

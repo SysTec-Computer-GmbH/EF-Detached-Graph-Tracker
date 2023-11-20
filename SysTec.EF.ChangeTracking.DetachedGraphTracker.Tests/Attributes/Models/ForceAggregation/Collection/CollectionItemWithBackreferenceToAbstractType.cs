@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.SharedModels;
 
-namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.Attributes.Models.ForceAggregation.Collection;
+namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.Attributes.Models.Association.Collection;
 
-[Table("ForceAggregationCollectionItems")]
+[Table("AssociationCollectionItems")]
 public class CollectionItemWithBackreferenceToAbstractType : IdBase
 {
     public int AbstractTypeId { get; set; }

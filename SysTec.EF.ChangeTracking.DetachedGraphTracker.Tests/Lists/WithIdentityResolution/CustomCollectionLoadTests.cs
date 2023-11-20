@@ -8,23 +8,23 @@ public class CustomCollectionLoadTests : TestBase<ListTestsDbContext>
 {
     [Test]
     public async Task
-        _01_CompositionInChangeTracker_IsNotOverwritten_WithDatabaseValue_WhenAggregationOfSameTypeAndKeyIsLoaded_ForRemovingItFromAnAggregationCollection()
+        _01_CompositionInChangeTracker_IsNotOverwritten_WithDatabaseValue_WhenAssociationOfSameTypeAndKeyIsLoaded_ForRemovingItFromAnAssociationCollection()
     {
-        var aggregationItem = new Item
+        var associationItem = new Item
         {
-            Text = "AggregationItem"
+            Text = "AssociationItem"
         };
 
         await using (var dbContext = new ListTestsDbContext())
         {
-            dbContext.Add(aggregationItem);
+            dbContext.Add(associationItem);
             await dbContext.SaveChangesAsync();
         }
 
-        var rootNode = new RootNodeWithCompositionAndAggregationOfSameType
+        var rootNode = new RootNodeWithCompositionAndAssociationOfSameType
         {
-            A_Composition_Item = aggregationItem,
-            B_Aggregation_Items = { aggregationItem }
+            A_Composition_Item = associationItem,
+            B_Association_Items = { associationItem }
         };
 
         await using (var dbContext = new ListTestsDbContext())
@@ -35,22 +35,22 @@ public class CustomCollectionLoadTests : TestBase<ListTestsDbContext>
 
         await using (var dbContext = new ListTestsDbContext())
         {
-            var rootNodeFromDb = await dbContext.RootNodesWithCompositionAndAggregationOfSameType
+            var rootNodeFromDb = await dbContext.RootNodesWithCompositionAndAssociationOfSameType
                 .Include(x => x.A_Composition_Item)
-                .Include(x => x.B_Aggregation_Items)
+                .Include(x => x.B_Association_Items)
                 .SingleAsync(x => x.Id == rootNode.Id);
 
             Assert.Multiple(() =>
             {
                 Assert.That(rootNodeFromDb.A_Composition_Item, Is.Not.Null);
-                Assert.That(rootNodeFromDb.B_Aggregation_Items, Has.Count.EqualTo(1));
+                Assert.That(rootNodeFromDb.B_Association_Items, Has.Count.EqualTo(1));
             });
         }
 
         const string updatedText = "UpdatedText";
-        var rootNodeUpdate = (RootNodeWithCompositionAndAggregationOfSameType)rootNode.Clone();
+        var rootNodeUpdate = (RootNodeWithCompositionAndAssociationOfSameType)rootNode.Clone();
         rootNodeUpdate.A_Composition_Item.Text = updatedText;
-        rootNodeUpdate.B_Aggregation_Items.Clear();
+        rootNodeUpdate.B_Association_Items.Clear();
 
         await using (var dbContext = new ListTestsDbContext())
         {
@@ -60,15 +60,15 @@ public class CustomCollectionLoadTests : TestBase<ListTestsDbContext>
 
         await using (var dbContext = new ListTestsDbContext())
         {
-            var rootNodeFromDb = await dbContext.RootNodesWithCompositionAndAggregationOfSameType
+            var rootNodeFromDb = await dbContext.RootNodesWithCompositionAndAssociationOfSameType
                 .Include(x => x.A_Composition_Item)
-                .Include(x => x.B_Aggregation_Items)
+                .Include(x => x.B_Association_Items)
                 .SingleAsync(x => x.Id == rootNode.Id);
 
             Assert.Multiple(() =>
             {
                 Assert.That(rootNodeFromDb.A_Composition_Item.Text, Is.EqualTo(updatedText));
-                Assert.That(rootNodeFromDb.B_Aggregation_Items, Has.Count.EqualTo(0));
+                Assert.That(rootNodeFromDb.B_Association_Items, Has.Count.EqualTo(0));
             });
         }
     }

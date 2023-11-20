@@ -88,23 +88,23 @@ public class ReferenceNavigationTests : TestBase<PolymorphismTestsDbContext>
     }
 
     [Test]
-    public async Task _02_RelationshipsInAggregationReferenceNavigation_WithDifferentSubTypes_CanBeConnectedAndSevered()
+    public async Task _02_RelationshipsInAssociationReferenceNavigation_WithDifferentSubTypes_CanBeConnectedAndSevered()
     {
-        var aggregationItem = new SubEntityWithNormalKey
+        var associationItem = new SubEntityWithNormalKey
         {
             Text = "SubEntity"
         };
 
         await using (var dbContext = new PolymorphismTestsDbContext())
         {
-            dbContext.Add(aggregationItem);
+            dbContext.Add(associationItem);
             await dbContext.SaveChangesAsync();
         }
 
         var rootEntity = new RootEntityWithBaseTypeNavigations
         {
             Text = "Root Entity",
-            AggregationItem = aggregationItem
+            AssociationItem = associationItem
         };
 
         await using (var dbContext = new PolymorphismTestsDbContext())
@@ -116,26 +116,26 @@ public class ReferenceNavigationTests : TestBase<PolymorphismTestsDbContext>
         await using (var dbContext = new PolymorphismTestsDbContext())
         {
             var rootEntityFromDb = await dbContext.RootEntities
-                .Include(x => x.AggregationItem)
+                .Include(x => x.AssociationItem)
                 .SingleAsync(x => x.Id == rootEntity.Id);
 
-            Assert.That(rootEntityFromDb.AggregationItem, Is.Not.Null);
-            Assert.That(rootEntityFromDb.AggregationItem, Is.TypeOf(typeof(SubEntityWithNormalKey)));
+            Assert.That(rootEntityFromDb.AssociationItem, Is.Not.Null);
+            Assert.That(rootEntityFromDb.AssociationItem, Is.TypeOf(typeof(SubEntityWithNormalKey)));
         }
 
-        var differentAggregationItem = new DifferentSubEntityWithNormalKey
+        var differentAssociationItem = new DifferentSubEntityWithNormalKey
         {
             Text = "Different SubEntity"
         };
 
         await using (var dbContext = new PolymorphismTestsDbContext())
         {
-            dbContext.Add(differentAggregationItem);
+            dbContext.Add(differentAssociationItem);
             await dbContext.SaveChangesAsync();
         }
 
         var rootEntityUpdate = (RootEntityWithBaseTypeNavigations)rootEntity.Clone();
-        rootEntityUpdate.AggregationItem = (DifferentSubEntityWithNormalKey)differentAggregationItem.Clone();
+        rootEntityUpdate.AssociationItem = (DifferentSubEntityWithNormalKey)differentAssociationItem.Clone();
 
         await using (var dbContext = new PolymorphismTestsDbContext())
         {
@@ -146,15 +146,15 @@ public class ReferenceNavigationTests : TestBase<PolymorphismTestsDbContext>
         await using (var dbContext = new PolymorphismTestsDbContext())
         {
             var rootEntityFromDb = await dbContext.RootEntities
-                .Include(x => x.AggregationItem)
+                .Include(x => x.AssociationItem)
                 .SingleAsync(x => x.Id == rootEntity.Id);
 
-            Assert.That(rootEntityFromDb.AggregationItem, Is.Not.Null);
-            Assert.That(rootEntityFromDb.AggregationItem, Is.TypeOf(typeof(DifferentSubEntityWithNormalKey)));
+            Assert.That(rootEntityFromDb.AssociationItem, Is.Not.Null);
+            Assert.That(rootEntityFromDb.AssociationItem, Is.TypeOf(typeof(DifferentSubEntityWithNormalKey)));
         }
 
         var rootEntityUpdate2 = (RootEntityWithBaseTypeNavigations)rootEntityUpdate.Clone();
-        rootEntityUpdate2.AggregationItem = null;
+        rootEntityUpdate2.AssociationItem = null;
 
         await using (var dbContext = new PolymorphismTestsDbContext())
         {
@@ -165,10 +165,10 @@ public class ReferenceNavigationTests : TestBase<PolymorphismTestsDbContext>
         await using (var dbContext = new PolymorphismTestsDbContext())
         {
             var rootEntityFromDb = await dbContext.RootEntities
-                .Include(x => x.AggregationItem)
+                .Include(x => x.AssociationItem)
                 .SingleAsync(x => x.Id == rootEntity.Id);
 
-            Assert.That(rootEntityFromDb.AggregationItem, Is.Null);
+            Assert.That(rootEntityFromDb.AssociationItem, Is.Null);
         }
 
         await using (var dbContext = new PolymorphismTestsDbContext())

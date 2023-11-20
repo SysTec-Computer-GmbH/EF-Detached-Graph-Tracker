@@ -5,9 +5,9 @@ namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.IdentityResolution
 
 public class RootNodeWithCollectionNavigations : IdBase
 {
-    [UpdateAssociationOnly] public List<Entity> A_Aggregations { get; set; } = new();
+    [UpdateAssociationOnly] public List<Entity> A_Associations { get; set; } = new();
 
     public List<Entity> B_Compositions { get; set; } = new();
 
-    [UpdateAssociationOnly] public List<Entity> C_Aggregations { get; set; } = new();
+    [UpdateAssociationOnly] public List<Entity> C_Associations { get; set; } = new();
 }

@@ -1,12 +1,12 @@
 using Microsoft.EntityFrameworkCore;
-using SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.Attributes.Models.ForceAggregation.Collection;
+using SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.Attributes.Models.Association.Collection;
 using SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.Attributes.Models.ForceRelationshipUnchanged.Reference;
 
 namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.Attributes.Database;
 
 public class AttributeTestsDbContext : DbContextBase
 {
-    public DbSet<ConcreteTypeWithConcreteCollection> ForceAggregationConcreteCollectionTypes { get; set; }
+    public DbSet<ConcreteTypeWithConcreteCollection> AssociationConcreteCollectionTypes { get; set; }
     
     public DbSet<Models.ForceDelete.Collection.ConcreteTypeWithConcreteCollection> ForceDeleteConcreteTypes { get; set; }
     
@@ -14,5 +14,5 @@ public class AttributeTestsDbContext : DbContextBase
     
     public DbSet<ConcreteTypeWithConcreteReference> ForceRelationshipUnchangedConcreteReferenceTypes { get; set; }
     
-    public DbSet<Models.ForceAggregation.Reference.ConcreteTypeWithConcreteReference> ForceAggregationConcreteReferenceTypes { get; set; }
+    public DbSet<Models.Association.Reference.ConcreteTypeWithConcreteReference> AssociationConcreteReferenceTypes { get; set; }
 }

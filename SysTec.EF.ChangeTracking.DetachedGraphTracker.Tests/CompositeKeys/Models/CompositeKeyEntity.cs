@@ -16,16 +16,16 @@ public class CompositeKeyEntity : ICloneable
 
     public List<CompositeForeignKeyCompositionEntity> B_Composition_Items { get; set; } = new();
 
-    [UpdateAssociationOnly] public CompositeForeignKeyAggregationEntity? A_Aggregation_Item { get; set; }
+    [UpdateAssociationOnly] public CompositeForeignKeyAssociationEntity? A_Association_Item { get; set; }
 
-    [UpdateAssociationOnly] public List<CompositeForeignKeyAggregationEntity> B_Aggregation_Items { get; set; }
+    [UpdateAssociationOnly] public List<CompositeForeignKeyAssociationEntity> B_Association_Items { get; set; }
 
     public object Clone()
     {
         var clone = (CompositeKeyEntity)MemberwiseClone();
-        clone.A_Aggregation_Item = (CompositeForeignKeyAggregationEntity)A_Aggregation_Item?.Clone();
-        clone.B_Aggregation_Items =
-            B_Aggregation_Items.Select(x => (CompositeForeignKeyAggregationEntity)x.Clone()).ToList();
+        clone.A_Association_Item = (CompositeForeignKeyAssociationEntity)A_Association_Item?.Clone();
+        clone.B_Association_Items =
+            B_Association_Items.Select(x => (CompositeForeignKeyAssociationEntity)x.Clone()).ToList();
         clone.A_Composition_Item = (CompositeForeignKeyCompositionEntity)A_Composition_Item?.Clone();
         clone.B_Composition_Items =
             B_Composition_Items.Select(x => (CompositeForeignKeyCompositionEntity)x.Clone()).ToList();

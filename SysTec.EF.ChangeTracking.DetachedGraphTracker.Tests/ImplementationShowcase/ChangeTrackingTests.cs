@@ -106,7 +106,7 @@ public class ChangeTrackingTests : TestBase<ImplementationShowcaseTestsDbContext
                 Id = entity.Composition.Id,
                 Text = updatedText
             },
-            Aggregations =
+            Associations =
             {
                 new Entity
                 {

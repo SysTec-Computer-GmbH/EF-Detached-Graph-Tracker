@@ -3,7 +3,7 @@ using SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.SharedModels;
 
 namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.Relationships.Models.OneToOne;
 
-public class DependentItemWithRequiredAggregation : IdBase
+public class DependentItemWithRequiredAssociation : IdBase
 {
-    [UpdateAssociationOnly] public PrincipalItemForAggregation RequiredPrincipal { get; set; }
+    [UpdateAssociationOnly] public PrincipalItemForAssociation RequiredPrincipal { get; set; }
 }

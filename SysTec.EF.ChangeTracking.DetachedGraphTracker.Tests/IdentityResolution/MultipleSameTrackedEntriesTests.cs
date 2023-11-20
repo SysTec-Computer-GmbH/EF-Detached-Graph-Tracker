@@ -8,7 +8,7 @@ public class MultipleSameTrackedEntriesTests : TestBase<IdentityResolutionTestsD
 {
     [Test]
     public async Task
-        _01_GraphWithEntry_AllInReferenceNavigations_FirstTrackedAsAggregation_ThenTrackedAsComposition_ThenTrackedAsAggregation_DoesNotThrow_AndUpdatesValuesCorrectly()
+        _01_GraphWithEntry_AllInReferenceNavigations_FirstTrackedAsAssociation_ThenTrackedAsComposition_ThenTrackedAsAssociation_DoesNotThrow_AndUpdatesValuesCorrectly()
     {
         var entity = new Entity()
         {
@@ -23,16 +23,16 @@ public class MultipleSameTrackedEntriesTests : TestBase<IdentityResolutionTestsD
 
         var root = new RootNodeWithReferenceNavigations()
         {
-            A_Aggregation = (Entity)entity.Clone(),
+            A_Association = (Entity)entity.Clone(),
             B_Composition = (Entity)entity.Clone(),
-            C_Aggregation = (Entity)entity.Clone()
+            C_Association = (Entity)entity.Clone()
         };
         
-        root.A_Aggregation.Text = nameof(root.A_Aggregation);
+        root.A_Association.Text = nameof(root.A_Association);
         root.B_Composition.Text = nameof(root.B_Composition);
-        root.C_Aggregation.Text = nameof(root.C_Aggregation);
+        root.C_Association.Text = nameof(root.C_Association);
         
-        Assert.That(ReferenceEquals(root.A_Aggregation, root.B_Composition), Is.False);
+        Assert.That(ReferenceEquals(root.A_Association, root.B_Composition), Is.False);
         
         await using (var dbContext = new IdentityResolutionTestsDbContext())
         {
@@ -51,7 +51,7 @@ public class MultipleSameTrackedEntriesTests : TestBase<IdentityResolutionTestsD
 
     [Test]
     public async Task
-        _02_GraphWithEntry_AllInCollectionNavigations_FirstTrackedAsAggregation_ThenTrackedAsComposition_ThenTrackedAsAggregation_DoesNotThrow_AndUpdatesValuesCorrectly()
+        _02_GraphWithEntry_AllInCollectionNavigations_FirstTrackedAsAssociation_ThenTrackedAsComposition_ThenTrackedAsAssociation_DoesNotThrow_AndUpdatesValuesCorrectly()
     {
         var entity = new Entity()
         {
@@ -65,13 +65,13 @@ public class MultipleSameTrackedEntriesTests : TestBase<IdentityResolutionTestsD
         }
 
         var root = new RootNodeWithCollectionNavigations();
-        root.A_Aggregations.Add((Entity)entity.Clone());
+        root.A_Associations.Add((Entity)entity.Clone());
         root.B_Compositions.Add((Entity)entity.Clone());
-        root.C_Aggregations.Add((Entity)entity.Clone());
+        root.C_Associations.Add((Entity)entity.Clone());
 
-        root.A_Aggregations[0].Text = nameof(root.A_Aggregations);
+        root.A_Associations[0].Text = nameof(root.A_Associations);
         root.B_Compositions[0].Text = nameof(root.B_Compositions);
-        root.C_Aggregations[0].Text = nameof(root.C_Aggregations);
+        root.C_Associations[0].Text = nameof(root.C_Associations);
         
         await using (var dbContext = new IdentityResolutionTestsDbContext())
         {

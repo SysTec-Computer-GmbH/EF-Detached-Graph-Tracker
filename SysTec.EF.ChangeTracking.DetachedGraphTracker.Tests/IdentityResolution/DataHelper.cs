@@ -4,26 +4,26 @@ namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.IdentityResolution
 
 public static class DataHelper
 {
-    public const string AGGREGATION_NAME = "Aggregation";
+    public const string ASSOCIATION_NAME = "Association";
     public const string COMPOSITION_NAME = "Composition";
 
-    public static SubTreeRootNode GetSubTreeRootNode(string compositionOrAggregationNaming)
+    public static SubTreeRootNode GetSubTreeRootNode(string compositionOrAssociationNaming)
     {
         return new SubTreeRootNode
         {
-            Text = $"SubTree {compositionOrAggregationNaming} Root",
+            Text = $"SubTree {compositionOrAssociationNaming} Root",
             ReferenceItem = new SubTreeReferenceItem
             {
-                Text = $"SubTree {compositionOrAggregationNaming} Item",
+                Text = $"SubTree {compositionOrAssociationNaming} Item",
                 SubTreeChildItems = new List<SubTreeChildItem>
                 {
                     new()
                     {
-                        Text = $"SubTree {compositionOrAggregationNaming} Item Child 1"
+                        Text = $"SubTree {compositionOrAssociationNaming} Item Child 1"
                     },
                     new()
                     {
-                        Text = $"SubTree {compositionOrAggregationNaming} Item Child 2"
+                        Text = $"SubTree {compositionOrAssociationNaming} Item Child 2"
                     }
                 }
             },
@@ -31,11 +31,11 @@ public static class DataHelper
             {
                 new()
                 {
-                    Text = $"SubTree List {compositionOrAggregationNaming} Item 1"
+                    Text = $"SubTree List {compositionOrAssociationNaming} Item 1"
                 },
                 new()
                 {
-                    Text = $"SubTree List {compositionOrAggregationNaming} Item 2"
+                    Text = $"SubTree List {compositionOrAssociationNaming} Item 2"
                 }
             }
         };

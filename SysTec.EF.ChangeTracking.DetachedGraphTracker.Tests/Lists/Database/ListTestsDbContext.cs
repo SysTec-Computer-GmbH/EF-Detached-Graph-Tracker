@@ -18,7 +18,7 @@ public class ListTestsDbContext : DbContextBase
         set;
     }
 
-    public DbSet<RootNodeWithOptionalSimpleListAndForceAggregation> RootNodesWithOptionalSimpleListAndForceAggregation
+    public DbSet<RootNodeWithOptionalSimpleListAndAssociation> RootNodesWithOptionalSimpleListAndAssociation
     {
         get;
         set;
@@ -32,7 +32,7 @@ public class ListTestsDbContext : DbContextBase
         set;
     }
 
-    public DbSet<RootNodeWithCompositionAndAggregationOfSameType> RootNodesWithCompositionAndAggregationOfSameType
+    public DbSet<RootNodeWithCompositionAndAssociationOfSameType> RootNodesWithCompositionAndAssociationOfSameType
     {
         get;
         set;

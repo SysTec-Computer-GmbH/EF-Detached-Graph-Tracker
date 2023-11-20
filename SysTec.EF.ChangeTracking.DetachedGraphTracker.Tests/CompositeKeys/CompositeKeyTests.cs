@@ -137,22 +137,22 @@ public class CompositeKeyTests : TestBase<CompositeKeyTestsDbContext>
 
     [Test]
     public async Task
-        _03_RelationshipsWithCompositeKeyEntities_ForAggregations_CanBeConnectedAndSevered_UsingTrackGraphHandler()
+        _03_RelationshipsWithCompositeKeyEntities_ForAssociations_CanBeConnectedAndSevered_UsingTrackGraphHandler()
     {
-        const string originalText = "Reference Aggregation Item";
-        var aggregationItem = new CompositeForeignKeyAggregationEntity
+        const string originalText = "Reference Association Item";
+        var associationItem = new CompositeForeignKeyAssociationEntity
         {
             Text = originalText
         };
 
         await using (var dbContext = new CompositeKeyTestsDbContext())
         {
-            dbContext.Add(aggregationItem);
+            dbContext.Add(associationItem);
             await dbContext.SaveChangesAsync();
         }
 
         var compositeKeyEntity = GetCompositeKeyEntity();
-        compositeKeyEntity.A_Aggregation_Item = (CompositeForeignKeyAggregationEntity)aggregationItem.Clone();
+        compositeKeyEntity.A_Association_Item = (CompositeForeignKeyAssociationEntity)associationItem.Clone();
 
         await using (var dbContext = new CompositeKeyTestsDbContext())
         {
@@ -163,17 +163,17 @@ public class CompositeKeyTests : TestBase<CompositeKeyTestsDbContext>
         await using (var dbContext = new CompositeKeyTestsDbContext())
         {
             var compositeKeyEntityFromDb = await dbContext.CompositeKeyEntities
-                .Include(x => x.A_Aggregation_Item)
+                .Include(x => x.A_Association_Item)
                 .SingleAsync();
 
-            Assert.That(compositeKeyEntityFromDb.A_Aggregation_Item, Is.Not.Null);
+            Assert.That(compositeKeyEntityFromDb.A_Association_Item, Is.Not.Null);
         }
 
         const string updatedText = "Updated Text";
         var compositeKeyEntityUpdate = (CompositeKeyEntity)compositeKeyEntity.Clone();
-        compositeKeyEntityUpdate.B_Aggregation_Items.Add(
-            (CompositeForeignKeyAggregationEntity)compositeKeyEntityUpdate.A_Aggregation_Item!.Clone());
-        compositeKeyEntityUpdate.B_Aggregation_Items[0].Text = updatedText;
+        compositeKeyEntityUpdate.B_Association_Items.Add(
+            (CompositeForeignKeyAssociationEntity)compositeKeyEntityUpdate.A_Association_Item!.Clone());
+        compositeKeyEntityUpdate.B_Association_Items[0].Text = updatedText;
 
         await using (var dbContext = new CompositeKeyTestsDbContext())
         {
@@ -184,23 +184,23 @@ public class CompositeKeyTests : TestBase<CompositeKeyTestsDbContext>
         await using (var dbContext = new CompositeKeyTestsDbContext())
         {
             var compositeKeyEntityFromDb = await dbContext.CompositeKeyEntities
-                .Include(x => x.A_Aggregation_Item)
-                .Include(x => x.B_Aggregation_Items)
+                .Include(x => x.A_Association_Item)
+                .Include(x => x.B_Association_Items)
                 .SingleAsync();
 
             Assert.Multiple(() =>
             {
-                Assert.That(compositeKeyEntityFromDb.A_Aggregation_Item, Is.Not.Null);
-                Assert.That(compositeKeyEntityFromDb.A_Aggregation_Item!.Id, Is.EqualTo(aggregationItem.Id));
-                Assert.That(compositeKeyEntityFromDb.A_Aggregation_Item!.Text, Is.EqualTo(originalText));
-                Assert.That(compositeKeyEntityFromDb.B_Aggregation_Items, Has.Count.EqualTo(1));
-                Assert.That(compositeKeyEntityFromDb.B_Aggregation_Items[0].Id, Is.EqualTo(aggregationItem.Id));
-                Assert.That(compositeKeyEntityFromDb.B_Aggregation_Items[0].Text, Is.EqualTo(originalText));
+                Assert.That(compositeKeyEntityFromDb.A_Association_Item, Is.Not.Null);
+                Assert.That(compositeKeyEntityFromDb.A_Association_Item!.Id, Is.EqualTo(associationItem.Id));
+                Assert.That(compositeKeyEntityFromDb.A_Association_Item!.Text, Is.EqualTo(originalText));
+                Assert.That(compositeKeyEntityFromDb.B_Association_Items, Has.Count.EqualTo(1));
+                Assert.That(compositeKeyEntityFromDb.B_Association_Items[0].Id, Is.EqualTo(associationItem.Id));
+                Assert.That(compositeKeyEntityFromDb.B_Association_Items[0].Text, Is.EqualTo(originalText));
             });
         }
 
         var compositeKeyEntityUpdate2 = (CompositeKeyEntity)compositeKeyEntityUpdate.Clone();
-        compositeKeyEntityUpdate2.B_Aggregation_Items.Clear();
+        compositeKeyEntityUpdate2.B_Association_Items.Clear();
 
         await using (var dbContext = new CompositeKeyTestsDbContext())
         {
@@ -211,20 +211,20 @@ public class CompositeKeyTests : TestBase<CompositeKeyTestsDbContext>
         await using (var dbContext = new CompositeKeyTestsDbContext())
         {
             var compositeKeyEntityFromDb = await dbContext.CompositeKeyEntities
-                .Include(x => x.A_Aggregation_Item)
-                .Include(x => x.B_Aggregation_Items)
+                .Include(x => x.A_Association_Item)
+                .Include(x => x.B_Association_Items)
                 .SingleAsync();
 
             Assert.Multiple(() =>
             {
-                Assert.That(compositeKeyEntityFromDb.A_Aggregation_Item, Is.Not.Null);
-                Assert.That(compositeKeyEntityFromDb.A_Aggregation_Item!.Id, Is.EqualTo(aggregationItem.Id));
-                Assert.That(compositeKeyEntityFromDb.B_Aggregation_Items, Is.Empty);
+                Assert.That(compositeKeyEntityFromDb.A_Association_Item, Is.Not.Null);
+                Assert.That(compositeKeyEntityFromDb.A_Association_Item!.Id, Is.EqualTo(associationItem.Id));
+                Assert.That(compositeKeyEntityFromDb.B_Association_Items, Is.Empty);
             });
         }
 
         var compositeKeyEntityUpdate3 = (CompositeKeyEntity)compositeKeyEntityUpdate2.Clone();
-        compositeKeyEntityUpdate3.A_Aggregation_Item = null;
+        compositeKeyEntityUpdate3.A_Association_Item = null;
 
         await using (var dbContext = new CompositeKeyTestsDbContext())
         {
@@ -235,14 +235,14 @@ public class CompositeKeyTests : TestBase<CompositeKeyTestsDbContext>
         await using (var dbContext = new CompositeKeyTestsDbContext())
         {
             var compositeKeyEntityFromDb = await dbContext.CompositeKeyEntities
-                .Include(x => x.A_Aggregation_Item)
-                .Include(x => x.B_Aggregation_Items)
+                .Include(x => x.A_Association_Item)
+                .Include(x => x.B_Association_Items)
                 .SingleAsync();
 
             Assert.Multiple(() =>
             {
-                Assert.That(compositeKeyEntityFromDb.A_Aggregation_Item, Is.Null);
-                Assert.That(compositeKeyEntityFromDb.B_Aggregation_Items, Is.Empty);
+                Assert.That(compositeKeyEntityFromDb.A_Association_Item, Is.Null);
+                Assert.That(compositeKeyEntityFromDb.B_Association_Items, Is.Empty);
             });
         }
     }

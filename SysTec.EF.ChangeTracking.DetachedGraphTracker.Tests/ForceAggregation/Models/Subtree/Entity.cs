@@ -1,6 +1,6 @@
 using SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.SharedModels;
 
-namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.ForceAggregation.Models.Subtree;
+namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.Association.Models.Subtree;
 
 public class Entity : IdBase, ICloneable
 {

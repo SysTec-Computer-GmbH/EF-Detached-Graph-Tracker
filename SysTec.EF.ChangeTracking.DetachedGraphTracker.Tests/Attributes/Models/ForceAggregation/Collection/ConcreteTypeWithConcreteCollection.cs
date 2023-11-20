@@ -1,6 +1,6 @@
 using SysTec.EF.ChangeTracking.DetachedGraphTracker.Attributes;
 
-namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.Attributes.Models.ForceAggregation.Collection;
+namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.Attributes.Models.Association.Collection;
 
 public class ConcreteTypeWithConcreteCollection : AbstractTypeWithAbstractCollection
 {

@@ -61,21 +61,21 @@ public class OneToOneTests : TestBase<RelationshipTestsDbContext>
     }
 
     [Test]
-    public async Task _03_SetNull_OnReferenceNavigation_ForRequiredOneToOneAggregationRelationship_DeletesDependent()
+    public async Task _03_SetNull_OnReferenceNavigation_ForRequiredOneToOneAssociationRelationship_DeletesDependent()
     {
-        var aggregationItem = new PrincipalItemForAggregation();
+        var associationItem = new PrincipalItemForAssociation();
 
         await using (var dbContext = new RelationshipTestsDbContext())
         {
-            dbContext.Add(aggregationItem);
+            dbContext.Add(associationItem);
             await dbContext.SaveChangesAsync();
         }
 
-        var item = new DependentItemWithRequiredAggregation
+        var item = new DependentItemWithRequiredAssociation
         {
-            RequiredPrincipal = new PrincipalItemForAggregation
+            RequiredPrincipal = new PrincipalItemForAssociation
             {
-                Id = aggregationItem.Id
+                Id = associationItem.Id
             }
         };
 
@@ -85,7 +85,7 @@ public class OneToOneTests : TestBase<RelationshipTestsDbContext>
             await dbContext.SaveChangesAsync();
         }
 
-        var itemUpdate = new DependentItemWithRequiredAggregation
+        var itemUpdate = new DependentItemWithRequiredAssociation
         {
             Id = item.Id,
             RequiredPrincipal = null
@@ -99,7 +99,7 @@ public class OneToOneTests : TestBase<RelationshipTestsDbContext>
 
         await using (var dbContext = new RelationshipTestsDbContext())
         {
-            var itemFromDb = await dbContext.Set<DependentItemWithRequiredAggregation>()
+            var itemFromDb = await dbContext.Set<DependentItemWithRequiredAssociation>()
                 .Include(i => i.RequiredPrincipal)
                 .SingleOrDefaultAsync(i => i.Id == item.Id);
 

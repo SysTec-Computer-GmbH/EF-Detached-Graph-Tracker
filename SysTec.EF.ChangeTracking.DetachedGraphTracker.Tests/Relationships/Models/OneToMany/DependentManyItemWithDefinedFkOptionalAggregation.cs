@@ -3,9 +3,9 @@ using SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.SharedModels;
 
 namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.Relationships.Models.OneToMany;
 
-public class DependentManyItemWithDefinedFkOptionalAggregation : IdBase
+public class DependentManyItemWithDefinedFkOptionalAssociation : IdBase
 {
-    public int? OptionalAggregationId { get; set; }
+    public int? OptionalAssociationId { get; set; }
 
-    [UpdateAssociationOnly] public OneItem? OptionalAggregation { get; set; }
+    [UpdateAssociationOnly] public OneItem? OptionalAssociation { get; set; }
 }

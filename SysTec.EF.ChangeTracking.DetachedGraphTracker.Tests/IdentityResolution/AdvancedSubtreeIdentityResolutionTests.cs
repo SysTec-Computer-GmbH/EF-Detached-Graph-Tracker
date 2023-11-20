@@ -38,10 +38,10 @@ public class AdvancedSubtreeIdentityResolutionTests : TestBase<IdentityResolutio
         }
 
         var rootUpdate = (AdvancedSubTreeRootNodeWithFirstTrackedComposition)root.Clone();
-        rootUpdate.B_AggregationNode = (AdvancedSubTreeNode1)root.A_CompositionNode!.Clone();
-        rootUpdate.B_AggregationNode.CompositionNode.CompositionNode.Text = "Subtree Node 3 Updated";
-        rootUpdate.B_AggregationNode.CompositionNode.CompositionListItems[0].Text = "Subtree List Item 1 Updated";
-        rootUpdate.B_AggregationNode.CompositionNode.CompositionListItems[0].CompositionListItems[0].Text =
+        rootUpdate.B_AssociationNode = (AdvancedSubTreeNode1)root.A_CompositionNode!.Clone();
+        rootUpdate.B_AssociationNode.CompositionNode.CompositionNode.Text = "Subtree Node 3 Updated";
+        rootUpdate.B_AssociationNode.CompositionNode.CompositionListItems[0].Text = "Subtree List Item 1 Updated";
+        rootUpdate.B_AssociationNode.CompositionNode.CompositionListItems[0].CompositionListItems[0].Text =
             "Subtree List Item 2 Updated";
 
         await using (var dbContext = new IdentityResolutionTestsDbContext())
@@ -71,30 +71,30 @@ public class AdvancedSubtreeIdentityResolutionTests : TestBase<IdentityResolutio
             Assert.That(rootFromDb.A_CompositionNode!.CompositionNode.CompositionNode.CompositionNode, Is.Not.Null);
             Assert.That(rootFromDb.A_CompositionNode!.CompositionNode.CompositionNode.CompositionNode2, Is.Not.Null);
 
-            Assert.That(rootFromDb.B_AggregationNode, Is.Not.Null);
-            Assert.That(rootFromDb.B_AggregationNode!.CompositionNode, Is.Not.Null);
+            Assert.That(rootFromDb.B_AssociationNode, Is.Not.Null);
+            Assert.That(rootFromDb.B_AssociationNode!.CompositionNode, Is.Not.Null);
 
-            Assert.That(rootFromDb.B_AggregationNode!.CompositionNode.CompositionListItems, Has.Count.EqualTo(1));
-            Assert.That(rootFromDb.B_AggregationNode!.CompositionNode.CompositionListItems[0].Text,
+            Assert.That(rootFromDb.B_AssociationNode!.CompositionNode.CompositionListItems, Has.Count.EqualTo(1));
+            Assert.That(rootFromDb.B_AssociationNode!.CompositionNode.CompositionListItems[0].Text,
                 Is.EqualTo(nameof(AdvancedSubTreeListItem1)));
-            Assert.That(rootFromDb.B_AggregationNode!.CompositionNode.CompositionListItems[0].CompositionListItems,
+            Assert.That(rootFromDb.B_AssociationNode!.CompositionNode.CompositionListItems[0].CompositionListItems,
                 Has.Count.EqualTo(1));
             Assert.That(
-                rootFromDb.B_AggregationNode!.CompositionNode.CompositionListItems[0].CompositionListItems[0].Text,
+                rootFromDb.B_AssociationNode!.CompositionNode.CompositionListItems[0].CompositionListItems[0].Text,
                 Is.EqualTo(nameof(AdvancedSubTreeListItem2)));
 
-            Assert.That(rootFromDb.B_AggregationNode!.CompositionNode.CompositionNode, Is.Not.Null);
-            Assert.That(rootFromDb.B_AggregationNode!.CompositionNode.CompositionNode.Text,
+            Assert.That(rootFromDb.B_AssociationNode!.CompositionNode.CompositionNode, Is.Not.Null);
+            Assert.That(rootFromDb.B_AssociationNode!.CompositionNode.CompositionNode.Text,
                 Is.EqualTo(nameof(AdvancedSubTreeNode3)));
-            Assert.That(rootFromDb.B_AggregationNode!.CompositionNode.CompositionNode.CompositionNode, Is.Not.Null);
-            Assert.That(rootFromDb.B_AggregationNode!.CompositionNode.CompositionNode.CompositionNode2, Is.Not.Null);
+            Assert.That(rootFromDb.B_AssociationNode!.CompositionNode.CompositionNode.CompositionNode, Is.Not.Null);
+            Assert.That(rootFromDb.B_AssociationNode!.CompositionNode.CompositionNode.CompositionNode2, Is.Not.Null);
         }
     }
 
     [Test]
-    public async Task _02_IdentityResolution_ForReferenceNavigation_WithFirstTrackedAggregationSubtree()
+    public async Task _02_IdentityResolution_ForReferenceNavigation_WithFirstTrackedAssociationSubtree()
     {
-        var root = new AdvancedSubTreeRootNodeWithFirstTrackedAggregation
+        var root = new AdvancedSubTreeRootNodeWithFirstTrackedAssociation
         {
             Text = "Root Init",
             B_CompositionNode = GetInitialSubTreeRoot()
@@ -108,7 +108,7 @@ public class AdvancedSubtreeIdentityResolutionTests : TestBase<IdentityResolutio
 
         await using (var dbContext = new IdentityResolutionTestsDbContext())
         {
-            var rootFromDb = await dbContext.AdvancedRootsWithFirstTrackedAggregation
+            var rootFromDb = await dbContext.AdvancedRootsWithFirstTrackedAssociation
                 .SingleAsync(r => r.Id == root.Id);
 
             Assert.That(rootFromDb.B_CompositionNode, Is.Not.Null);
@@ -121,8 +121,8 @@ public class AdvancedSubtreeIdentityResolutionTests : TestBase<IdentityResolutio
             Assert.That(rootFromDb.B_CompositionNode!.CompositionNode.CompositionNode.CompositionNode2, Is.Not.Null);
         }
 
-        var rootUpdate = (AdvancedSubTreeRootNodeWithFirstTrackedAggregation)root.Clone();
-        rootUpdate.A_AggregationNode = (AdvancedSubTreeNode1)root.B_CompositionNode.Clone();
+        var rootUpdate = (AdvancedSubTreeRootNodeWithFirstTrackedAssociation)root.Clone();
+        rootUpdate.A_AssociationNode = (AdvancedSubTreeNode1)root.B_CompositionNode.Clone();
 
         rootUpdate.B_CompositionNode!.CompositionNode.CompositionNode.Text = "Subtree Node 3 Updated";
         rootUpdate.B_CompositionNode!.CompositionNode.CompositionListItems[0].Text = "Subtree List Item 1 Updated";
@@ -137,7 +137,7 @@ public class AdvancedSubtreeIdentityResolutionTests : TestBase<IdentityResolutio
 
         await using (var dbContext = new IdentityResolutionTestsDbContext())
         {
-            var rootFromDb = await dbContext.AdvancedRootsWithFirstTrackedAggregation
+            var rootFromDb = await dbContext.AdvancedRootsWithFirstTrackedAssociation
                 .SingleAsync(r => r.Id == root.Id);
 
             Assert.That(rootFromDb.B_CompositionNode, Is.Not.Null);
@@ -158,23 +158,23 @@ public class AdvancedSubtreeIdentityResolutionTests : TestBase<IdentityResolutio
             Assert.That(rootFromDb.B_CompositionNode!.CompositionNode.CompositionNode.CompositionNode, Is.Not.Null);
             Assert.That(rootFromDb.B_CompositionNode!.CompositionNode.CompositionNode.CompositionNode2, Is.Not.Null);
 
-            Assert.That(rootFromDb.A_AggregationNode, Is.Not.Null);
-            Assert.That(rootFromDb.A_AggregationNode!.CompositionNode, Is.Not.Null);
+            Assert.That(rootFromDb.A_AssociationNode, Is.Not.Null);
+            Assert.That(rootFromDb.A_AssociationNode!.CompositionNode, Is.Not.Null);
 
-            Assert.That(rootFromDb.A_AggregationNode!.CompositionNode.CompositionListItems, Has.Count.EqualTo(1));
-            Assert.That(rootFromDb.A_AggregationNode!.CompositionNode.CompositionListItems[0].Text,
+            Assert.That(rootFromDb.A_AssociationNode!.CompositionNode.CompositionListItems, Has.Count.EqualTo(1));
+            Assert.That(rootFromDb.A_AssociationNode!.CompositionNode.CompositionListItems[0].Text,
                 Is.EqualTo("Subtree List Item 1 Updated"));
-            Assert.That(rootFromDb.A_AggregationNode!.CompositionNode.CompositionListItems[0].CompositionListItems,
+            Assert.That(rootFromDb.A_AssociationNode!.CompositionNode.CompositionListItems[0].CompositionListItems,
                 Has.Count.EqualTo(1));
             Assert.That(
-                rootFromDb.A_AggregationNode!.CompositionNode.CompositionListItems[0].CompositionListItems[0].Text,
+                rootFromDb.A_AssociationNode!.CompositionNode.CompositionListItems[0].CompositionListItems[0].Text,
                 Is.EqualTo("Subtree List Item 2 Updated"));
 
-            Assert.That(rootFromDb.A_AggregationNode!.CompositionNode.CompositionNode, Is.Not.Null);
-            Assert.That(rootFromDb.A_AggregationNode!.CompositionNode.CompositionNode.Text,
+            Assert.That(rootFromDb.A_AssociationNode!.CompositionNode.CompositionNode, Is.Not.Null);
+            Assert.That(rootFromDb.A_AssociationNode!.CompositionNode.CompositionNode.Text,
                 Is.EqualTo("Subtree Node 3 Updated"));
-            Assert.That(rootFromDb.A_AggregationNode!.CompositionNode.CompositionNode.CompositionNode, Is.Not.Null);
-            Assert.That(rootFromDb.A_AggregationNode!.CompositionNode.CompositionNode.CompositionNode2, Is.Not.Null);
+            Assert.That(rootFromDb.A_AssociationNode!.CompositionNode.CompositionNode.CompositionNode, Is.Not.Null);
+            Assert.That(rootFromDb.A_AssociationNode!.CompositionNode.CompositionNode.CompositionNode2, Is.Not.Null);
         }
     }
 
@@ -209,10 +209,10 @@ public class AdvancedSubtreeIdentityResolutionTests : TestBase<IdentityResolutio
         }
 
         var rootUpdate = (AdvancedSubTreeRootNodeWithFirstTrackedComposition)root.Clone();
-        rootUpdate.B_AggregationNodes.Add((AdvancedSubTreeNode1)root.A_CompositionNode.Clone());
-        rootUpdate.B_AggregationNodes[0].CompositionNode.CompositionNode.Text = "Subtree Node 3 Updated";
-        rootUpdate.B_AggregationNodes[0].CompositionNode.CompositionListItems[0].Text = "Subtree List Item 1 Updated";
-        rootUpdate.B_AggregationNodes[0].CompositionNode.CompositionListItems[0].CompositionListItems[0].Text =
+        rootUpdate.B_AssociationNodes.Add((AdvancedSubTreeNode1)root.A_CompositionNode.Clone());
+        rootUpdate.B_AssociationNodes[0].CompositionNode.CompositionNode.Text = "Subtree Node 3 Updated";
+        rootUpdate.B_AssociationNodes[0].CompositionNode.CompositionListItems[0].Text = "Subtree List Item 1 Updated";
+        rootUpdate.B_AssociationNodes[0].CompositionNode.CompositionListItems[0].CompositionListItems[0].Text =
             "Subtree List Item 2 Updated";
 
         await using (var dbContext = new IdentityResolutionTestsDbContext())
@@ -242,30 +242,30 @@ public class AdvancedSubtreeIdentityResolutionTests : TestBase<IdentityResolutio
             Assert.That(rootFromDb.A_CompositionNode!.CompositionNode.CompositionNode.CompositionNode, Is.Not.Null);
             Assert.That(rootFromDb.A_CompositionNode!.CompositionNode.CompositionNode.CompositionNode2, Is.Not.Null);
 
-            Assert.That(rootFromDb.B_AggregationNodes, Has.Count.EqualTo(1));
-            Assert.That(rootFromDb.B_AggregationNodes[0].CompositionNode, Is.Not.Null);
+            Assert.That(rootFromDb.B_AssociationNodes, Has.Count.EqualTo(1));
+            Assert.That(rootFromDb.B_AssociationNodes[0].CompositionNode, Is.Not.Null);
 
-            Assert.That(rootFromDb.B_AggregationNodes[0].CompositionNode.CompositionListItems, Has.Count.EqualTo(1));
-            Assert.That(rootFromDb.B_AggregationNodes[0].CompositionNode.CompositionListItems[0].Text,
+            Assert.That(rootFromDb.B_AssociationNodes[0].CompositionNode.CompositionListItems, Has.Count.EqualTo(1));
+            Assert.That(rootFromDb.B_AssociationNodes[0].CompositionNode.CompositionListItems[0].Text,
                 Is.EqualTo(nameof(AdvancedSubTreeListItem1)));
-            Assert.That(rootFromDb.B_AggregationNodes[0].CompositionNode.CompositionListItems[0].CompositionListItems,
+            Assert.That(rootFromDb.B_AssociationNodes[0].CompositionNode.CompositionListItems[0].CompositionListItems,
                 Has.Count.EqualTo(1));
             Assert.That(
-                rootFromDb.B_AggregationNodes[0].CompositionNode.CompositionListItems[0].CompositionListItems[0].Text,
+                rootFromDb.B_AssociationNodes[0].CompositionNode.CompositionListItems[0].CompositionListItems[0].Text,
                 Is.EqualTo(nameof(AdvancedSubTreeListItem2)));
 
-            Assert.That(rootFromDb.B_AggregationNodes[0].CompositionNode.CompositionNode, Is.Not.Null);
-            Assert.That(rootFromDb.B_AggregationNodes[0].CompositionNode.CompositionNode.Text,
+            Assert.That(rootFromDb.B_AssociationNodes[0].CompositionNode.CompositionNode, Is.Not.Null);
+            Assert.That(rootFromDb.B_AssociationNodes[0].CompositionNode.CompositionNode.Text,
                 Is.EqualTo(nameof(AdvancedSubTreeNode3)));
-            Assert.That(rootFromDb.B_AggregationNodes[0].CompositionNode.CompositionNode.CompositionNode, Is.Not.Null);
-            Assert.That(rootFromDb.B_AggregationNodes[0].CompositionNode.CompositionNode.CompositionNode2, Is.Not.Null);
+            Assert.That(rootFromDb.B_AssociationNodes[0].CompositionNode.CompositionNode.CompositionNode, Is.Not.Null);
+            Assert.That(rootFromDb.B_AssociationNodes[0].CompositionNode.CompositionNode.CompositionNode2, Is.Not.Null);
         }
     }
 
     [Test]
-    public async Task _04_IdentityResolution_ForCollectionNavigation_WithFirstTrackedAggregationSubtree()
+    public async Task _04_IdentityResolution_ForCollectionNavigation_WithFirstTrackedAssociationSubtree()
     {
-        var root = new AdvancedSubTreeRootNodeWithFirstTrackedAggregation
+        var root = new AdvancedSubTreeRootNodeWithFirstTrackedAssociation
         {
             Text = "Root Init",
             B_CompositionNode = GetInitialSubTreeRoot()
@@ -279,7 +279,7 @@ public class AdvancedSubtreeIdentityResolutionTests : TestBase<IdentityResolutio
 
         await using (var dbContext = new IdentityResolutionTestsDbContext())
         {
-            var rootFromDb = await dbContext.AdvancedRootsWithFirstTrackedAggregation
+            var rootFromDb = await dbContext.AdvancedRootsWithFirstTrackedAssociation
                 .SingleAsync(r => r.Id == root.Id);
 
             Assert.That(rootFromDb.B_CompositionNode, Is.Not.Null);
@@ -292,8 +292,8 @@ public class AdvancedSubtreeIdentityResolutionTests : TestBase<IdentityResolutio
             Assert.That(rootFromDb.B_CompositionNode!.CompositionNode.CompositionNode.CompositionNode2, Is.Not.Null);
         }
 
-        var rootUpdate = (AdvancedSubTreeRootNodeWithFirstTrackedAggregation)root.Clone();
-        rootUpdate.A_AggregationNodes.Add((AdvancedSubTreeNode1)root.B_CompositionNode.Clone());
+        var rootUpdate = (AdvancedSubTreeRootNodeWithFirstTrackedAssociation)root.Clone();
+        rootUpdate.A_AssociationNodes.Add((AdvancedSubTreeNode1)root.B_CompositionNode.Clone());
 
         rootUpdate.B_CompositionNode!.CompositionNode.CompositionNode.Text = "Subtree Node 3 Updated";
         rootUpdate.B_CompositionNode!.CompositionNode.CompositionListItems[0].Text = "Subtree List Item 1 Updated";
@@ -308,7 +308,7 @@ public class AdvancedSubtreeIdentityResolutionTests : TestBase<IdentityResolutio
 
         await using (var dbContext = new IdentityResolutionTestsDbContext())
         {
-            var rootFromDb = await dbContext.AdvancedRootsWithFirstTrackedAggregation
+            var rootFromDb = await dbContext.AdvancedRootsWithFirstTrackedAssociation
                 .SingleAsync(r => r.Id == root.Id);
 
             Assert.That(rootFromDb.B_CompositionNode, Is.Not.Null);
@@ -329,31 +329,31 @@ public class AdvancedSubtreeIdentityResolutionTests : TestBase<IdentityResolutio
             Assert.That(rootFromDb.B_CompositionNode!.CompositionNode.CompositionNode.CompositionNode, Is.Not.Null);
             Assert.That(rootFromDb.B_CompositionNode!.CompositionNode.CompositionNode.CompositionNode2, Is.Not.Null);
 
-            Assert.That(rootFromDb.A_AggregationNodes, Has.Count.EqualTo(1));
-            Assert.That(rootFromDb.A_AggregationNodes[0].CompositionNode, Is.Not.Null);
+            Assert.That(rootFromDb.A_AssociationNodes, Has.Count.EqualTo(1));
+            Assert.That(rootFromDb.A_AssociationNodes[0].CompositionNode, Is.Not.Null);
 
-            Assert.That(rootFromDb.A_AggregationNodes[0].CompositionNode.CompositionListItems, Has.Count.EqualTo(1));
-            Assert.That(rootFromDb.A_AggregationNodes[0].CompositionNode.CompositionListItems[0].Text,
+            Assert.That(rootFromDb.A_AssociationNodes[0].CompositionNode.CompositionListItems, Has.Count.EqualTo(1));
+            Assert.That(rootFromDb.A_AssociationNodes[0].CompositionNode.CompositionListItems[0].Text,
                 Is.EqualTo("Subtree List Item 1 Updated"));
-            Assert.That(rootFromDb.A_AggregationNodes[0].CompositionNode.CompositionListItems[0].CompositionListItems,
+            Assert.That(rootFromDb.A_AssociationNodes[0].CompositionNode.CompositionListItems[0].CompositionListItems,
                 Has.Count.EqualTo(1));
             Assert.That(
-                rootFromDb.A_AggregationNodes[0].CompositionNode.CompositionListItems[0].CompositionListItems[0].Text,
+                rootFromDb.A_AssociationNodes[0].CompositionNode.CompositionListItems[0].CompositionListItems[0].Text,
                 Is.EqualTo("Subtree List Item 2 Updated"));
 
-            Assert.That(rootFromDb.A_AggregationNodes[0].CompositionNode.CompositionNode, Is.Not.Null);
-            Assert.That(rootFromDb.A_AggregationNodes[0].CompositionNode.CompositionNode.Text,
+            Assert.That(rootFromDb.A_AssociationNodes[0].CompositionNode.CompositionNode, Is.Not.Null);
+            Assert.That(rootFromDb.A_AssociationNodes[0].CompositionNode.CompositionNode.Text,
                 Is.EqualTo("Subtree Node 3 Updated"));
-            Assert.That(rootFromDb.A_AggregationNodes[0].CompositionNode.CompositionNode.CompositionNode, Is.Not.Null);
-            Assert.That(rootFromDb.A_AggregationNodes[0].CompositionNode.CompositionNode.CompositionNode2, Is.Not.Null);
+            Assert.That(rootFromDb.A_AssociationNodes[0].CompositionNode.CompositionNode.CompositionNode, Is.Not.Null);
+            Assert.That(rootFromDb.A_AssociationNodes[0].CompositionNode.CompositionNode.CompositionNode2, Is.Not.Null);
         }
     }
 
     [Test]
     public async Task
-        _05_TrackingAnAggregationNode_NestedInSubtreeWithoutForceAggregationAttributeOverInboundNavigation_WithExistingCompositionInChangeTracker_DoesNotThrow()
+        _05_TrackingAnAssociationNode_NestedInSubtreeWithoutAssociationAttributeOverInboundNavigation_WithExistingCompositionInChangeTracker_DoesNotThrow()
     {
-        var root = new RootNodeWithExtraLayerAfterAggregation
+        var root = new RootNodeWithExtraLayerAfterAssociation
         {
             A_Composition = new TrackedItem
             {
@@ -367,7 +367,7 @@ public class AdvancedSubtreeIdentityResolutionTests : TestBase<IdentityResolutio
             await dbContext.SaveChangesAsync();
         }
 
-        var aggregationRoot = new ForceAggregationRoot
+        var associationRoot = new AssociationRoot
         {
             Composition = new ExtraLayerItem
             {
@@ -377,12 +377,12 @@ public class AdvancedSubtreeIdentityResolutionTests : TestBase<IdentityResolutio
 
         await using (var dbContext = new IdentityResolutionTestsDbContext())
         {
-            dbContext.Update(aggregationRoot);
+            dbContext.Update(associationRoot);
             await dbContext.SaveChangesAsync();
         }
 
-        var rootUpdate = (RootNodeWithExtraLayerAfterAggregation)root.Clone();
-        rootUpdate.B_Aggregation = (ForceAggregationRoot)aggregationRoot.Clone();
+        var rootUpdate = (RootNodeWithExtraLayerAfterAssociation)root.Clone();
+        rootUpdate.B_Association = (AssociationRoot)associationRoot.Clone();
 
         await using (var dbContext = new IdentityResolutionTestsDbContext())
         {

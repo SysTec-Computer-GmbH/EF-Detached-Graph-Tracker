@@ -8,7 +8,7 @@ namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.Lists.SimpleGraph;
 public class ListCreateAndUpdateTests : TestBase<ListTestsDbContext>
 {
     [Test]
-    public async Task _01_WithoutForceAggregation_TestCreateWithSimpleList()
+    public async Task _01_WithoutAssociation_TestCreateWithSimpleList()
     {
         var rootNode = DataHelper.GetRootNodeWithRequiredSimpleList();
 
@@ -26,7 +26,7 @@ public class ListCreateAndUpdateTests : TestBase<ListTestsDbContext>
     }
 
     [Test]
-    public async Task _02_WithoutForceAggregation_TestUpdateWithSimpleList()
+    public async Task _02_WithoutAssociation_TestUpdateWithSimpleList()
     {
         var rootNode = DataHelper.GetRootNodeWithRequiredSimpleList();
 
@@ -71,9 +71,9 @@ public class ListCreateAndUpdateTests : TestBase<ListTestsDbContext>
     }
 
     [Test]
-    public async Task _03_WithForceAggregation_TestCreateWithSimpleList()
+    public async Task _03_WithAssociation_TestCreateWithSimpleList()
     {
-        var rootNode = DataHelper.GetRootNodeWithOptionalSimpleListAndForceAggregation();
+        var rootNode = DataHelper.GetRootNodeWithOptionalSimpleListAndAssociation();
 
         await using (var dbContext = new ListTestsDbContext())
         {
@@ -85,21 +85,21 @@ public class ListCreateAndUpdateTests : TestBase<ListTestsDbContext>
         await using (var dbContext = new ListTestsDbContext())
         {
             var rootNodeFromDb =
-                await DataHelper.GetRootNodeWithOptionalSimpleListAndForceAggregationAttributeFromDbWithIncludesAsync(
+                await DataHelper.GetRootNodeWithOptionalSimpleListAndAssociationAttributeFromDbWithIncludesAsync(
                     dbContext);
             Assert.That(rootNodeFromDb.ListItems, Has.Count.EqualTo(0));
         }
 
         await using (var dbContext = new ListTestsDbContext())
         {
-            // Assure that nothing gets created in the database when list items without a key are provided in a force aggregation
+            // Assure that nothing gets created in the database when list items without a key are provided in a force association
             var hasSavedListItems = await dbContext.Set<OptionalListItem>().AnyAsync();
             Assert.That(hasSavedListItems, Is.False);
         }
     }
 
     [Test]
-    public async Task _04_WithForceAggregation_TestRelationshipIsCreated_AndItemsAreNotModified()
+    public async Task _04_WithAssociation_TestRelationshipIsCreated_AndItemsAreNotModified()
     {
         var optionalListItems = DataHelper.GetOptionalListItems();
 
@@ -109,7 +109,7 @@ public class ListCreateAndUpdateTests : TestBase<ListTestsDbContext>
             await dbContext.SaveChangesAsync();
         }
 
-        var rootNode = DataHelper.GetRootNodeWithOptionalSimpleListAndForceAggregation();
+        var rootNode = DataHelper.GetRootNodeWithOptionalSimpleListAndAssociation();
         var clonedOptionalListItems = optionalListItems.Select(x => (OptionalListItem)x.Clone()).ToList();
         clonedOptionalListItems[0].Text = "Item1Update";
         clonedOptionalListItems[1].Text = "Item2Update";
@@ -125,7 +125,7 @@ public class ListCreateAndUpdateTests : TestBase<ListTestsDbContext>
         await using (var dbContext = new ListTestsDbContext())
         {
             var rootNodeFromDb =
-                await DataHelper.GetRootNodeWithOptionalSimpleListAndForceAggregationAttributeFromDbWithIncludesAsync(
+                await DataHelper.GetRootNodeWithOptionalSimpleListAndAssociationAttributeFromDbWithIncludesAsync(
                     dbContext);
             Assert.That(rootNodeFromDb.ListItems, Has.Count.EqualTo(3));
         }

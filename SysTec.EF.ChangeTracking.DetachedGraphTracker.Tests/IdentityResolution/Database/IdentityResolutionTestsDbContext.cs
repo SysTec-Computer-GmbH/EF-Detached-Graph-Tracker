@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.IdentityResolution.Models;
 using SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.IdentityResolution.Models.AdvancedPartialSubTreeTests;
 using SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.IdentityResolution.Models.AdvancedSubTreeTests;
-using SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.IdentityResolution.Models.MultipleForceAggregation;
+using SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.IdentityResolution.Models.MultipleAssociation;
 using SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.IdentityResolution.Models.MultipleSameTrackedEntriesTests;
 
 namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.IdentityResolution.Database;
@@ -15,16 +15,16 @@ public class IdentityResolutionTestsDbContext : DbContextBase
         set;
     }
 
-    public DbSet<RootNodeWithFirstTrackedAggregationReference> RootNodesWithFirstTrackedAggregationReferences
+    public DbSet<RootNodeWithFirstTrackedAssociationReference> RootNodesWithFirstTrackedAssociationReferences
     {
         get;
         set;
     }
 
-    public DbSet<RootNodeWithFirstTrackedAggregationReferenceAndSubtree>
-        RootNodeWithFirstTrackedAggregationReferencesAndSubtrees { get; set; }
+    public DbSet<RootNodeWithFirstTrackedAssociationReferenceAndSubtree>
+        RootNodeWithFirstTrackedAssociationReferencesAndSubtrees { get; set; }
 
-    public DbSet<MultiForceAggregationRoot> MultiForceAggregationRoots { get; set; }
+    public DbSet<MultiAssociationRoot> MultiAssociationRoots { get; set; }
 
     public DbSet<AdvancedSubTreeRootNodeWithFirstTrackedComposition> AdvancedRootsWithFirstTrackedComposition
     {
@@ -32,13 +32,13 @@ public class IdentityResolutionTestsDbContext : DbContextBase
         set;
     }
 
-    public DbSet<AdvancedSubTreeRootNodeWithFirstTrackedAggregation> AdvancedRootsWithFirstTrackedAggregation
+    public DbSet<AdvancedSubTreeRootNodeWithFirstTrackedAssociation> AdvancedRootsWithFirstTrackedAssociation
     {
         get;
         set;
     }
 
-    public DbSet<RootNodeWithExtraLayerAfterAggregation> RootsWithExtraLayerAfterAggregations { get; set; }
+    public DbSet<RootNodeWithExtraLayerAfterAssociation> RootsWithExtraLayerAfterAssociations { get; set; }
 
     public DbSet<RootNodeWithReferenceNavigations> RootWithMultipleSameReferenceNavigationItems { get; set; }
     
@@ -46,11 +46,11 @@ public class IdentityResolutionTestsDbContext : DbContextBase
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<RootNodeWithFirstTrackedAggregationReferenceAndSubtree>()
+        modelBuilder.Entity<RootNodeWithFirstTrackedAssociationReferenceAndSubtree>()
             .Navigation(r => r.A_Item)
             .AutoInclude();
 
-        modelBuilder.Entity<RootNodeWithFirstTrackedAggregationReferenceAndSubtree>()
+        modelBuilder.Entity<RootNodeWithFirstTrackedAssociationReferenceAndSubtree>()
             .Navigation(r => r.B_Item)
             .AutoInclude();
 
@@ -66,18 +66,18 @@ public class IdentityResolutionTestsDbContext : DbContextBase
             .Navigation(i => i.SubTreeChildItems)
             .AutoInclude();
 
-        modelBuilder.Entity<MultiForceAggregationRoot>()
+        modelBuilder.Entity<MultiAssociationRoot>()
             .HasOne(rn => rn.CompositionItem)
             .WithMany()
             .IsRequired();
 
-        modelBuilder.Entity<MultiForceAggregationRoot>()
-            .HasOne(rn => rn.AggregationItem)
+        modelBuilder.Entity<MultiAssociationRoot>()
+            .HasOne(rn => rn.AssociationItem)
             .WithMany()
             .IsRequired(false);
 
         modelBuilder.Entity<CompositionItem>()
-            .HasOne(c => c.AggregationItem)
+            .HasOne(c => c.AssociationItem)
             .WithMany()
             .IsRequired(false);
 
@@ -86,15 +86,15 @@ public class IdentityResolutionTestsDbContext : DbContextBase
             .AutoInclude();
 
         modelBuilder.Entity<AdvancedSubTreeRootNodeWithFirstTrackedComposition>()
-            .Navigation(r => r.B_AggregationNode)
+            .Navigation(r => r.B_AssociationNode)
             .AutoInclude();
 
-        modelBuilder.Entity<AdvancedSubTreeRootNodeWithFirstTrackedAggregation>()
+        modelBuilder.Entity<AdvancedSubTreeRootNodeWithFirstTrackedAssociation>()
             .Navigation(r => r.B_CompositionNode)
             .AutoInclude();
 
-        modelBuilder.Entity<AdvancedSubTreeRootNodeWithFirstTrackedAggregation>()
-            .Navigation(r => r.A_AggregationNode)
+        modelBuilder.Entity<AdvancedSubTreeRootNodeWithFirstTrackedAssociation>()
+            .Navigation(r => r.A_AssociationNode)
             .AutoInclude();
 
         modelBuilder.Entity<AdvancedPartialSubTreeRootNodeWithFirstTrackedComposition>()
@@ -102,7 +102,7 @@ public class IdentityResolutionTestsDbContext : DbContextBase
             .AutoInclude();
 
         modelBuilder.Entity<AdvancedPartialSubTreeRootNodeWithFirstTrackedComposition>()
-            .Navigation(r => r.B_Aggregation)
+            .Navigation(r => r.B_Association)
             .AutoInclude();
 
         modelBuilder.Entity<AdvancedPartialSubTreeRootNodeWithFirstTrackedComposition>()
@@ -110,22 +110,22 @@ public class IdentityResolutionTestsDbContext : DbContextBase
             .AutoInclude();
 
         modelBuilder.Entity<AdvancedPartialSubTreeRootNodeWithFirstTrackedComposition>()
-            .Navigation(r => r.B_Aggregations)
+            .Navigation(r => r.B_Associations)
             .AutoInclude();
 
-        modelBuilder.Entity<AdvancedPartialSubTreeRootNodeWithFirstTrackedAggregation>()
-            .Navigation(r => r.A_Aggregation)
+        modelBuilder.Entity<AdvancedPartialSubTreeRootNodeWithFirstTrackedAssociation>()
+            .Navigation(r => r.A_Association)
             .AutoInclude();
 
-        modelBuilder.Entity<AdvancedPartialSubTreeRootNodeWithFirstTrackedAggregation>()
+        modelBuilder.Entity<AdvancedPartialSubTreeRootNodeWithFirstTrackedAssociation>()
             .Navigation(r => r.B_Composition)
             .AutoInclude();
 
-        modelBuilder.Entity<AdvancedPartialSubTreeRootNodeWithFirstTrackedAggregation>()
-            .Navigation(r => r.A_Aggregations)
+        modelBuilder.Entity<AdvancedPartialSubTreeRootNodeWithFirstTrackedAssociation>()
+            .Navigation(r => r.A_Associations)
             .AutoInclude();
 
-        modelBuilder.Entity<AdvancedPartialSubTreeRootNodeWithFirstTrackedAggregation>()
+        modelBuilder.Entity<AdvancedPartialSubTreeRootNodeWithFirstTrackedAssociation>()
             .Navigation(r => r.B_Compositions)
             .AutoInclude();
 

@@ -38,10 +38,10 @@ public static class DataHelper
         };
     }
 
-    public static RootNodeWithOptionalSimpleListAndForceAggregation
-        GetRootNodeWithOptionalSimpleListAndForceAggregation()
+    public static RootNodeWithOptionalSimpleListAndAssociation
+        GetRootNodeWithOptionalSimpleListAndAssociation()
     {
-        return new RootNodeWithOptionalSimpleListAndForceAggregation
+        return new RootNodeWithOptionalSimpleListAndAssociation
         {
             Text = "RootNode",
             ListItems = GetOptionalListItems()
@@ -82,11 +82,11 @@ public static class DataHelper
             .SingleAsync();
     }
 
-    public static async Task<RootNodeWithOptionalSimpleListAndForceAggregation>
-        GetRootNodeWithOptionalSimpleListAndForceAggregationAttributeFromDbWithIncludesAsync(
+    public static async Task<RootNodeWithOptionalSimpleListAndAssociation>
+        GetRootNodeWithOptionalSimpleListAndAssociationAttributeFromDbWithIncludesAsync(
             ListTestsDbContext dbContext)
     {
-        return await dbContext.RootNodesWithOptionalSimpleListAndForceAggregation
+        return await dbContext.RootNodesWithOptionalSimpleListAndAssociation
             .Include(x => x.ListItems.OrderBy(i => i.Text))
             .SingleAsync();
     }

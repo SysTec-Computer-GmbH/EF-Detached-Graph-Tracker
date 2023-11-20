@@ -7,5 +7,5 @@ public class ConcurrencyStampTestDbContext : DbContextBase
 {
     public DbSet<ItemWithConcurrencyStamp> Items { get; set; }
 
-    public DbSet<RootWithConcurrencyItemInForceAggregationReference> Roots { get; set; }
+    public DbSet<RootWithConcurrencyItemInAssociationReference> Roots { get; set; }
 }

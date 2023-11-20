@@ -1,31 +1,31 @@
 using Microsoft.EntityFrameworkCore;
 using SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.IdentityResolution.Database;
-using SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.IdentityResolution.Models.MultipleForceAggregation;
+using SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.IdentityResolution.Models.MultipleAssociation;
 
 namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.IdentityResolution;
 
-public class MultipleReferenceForceAggregationIdentityResolutionTests : TestBase<IdentityResolutionTestsDbContext>
+public class MultipleReferenceAssociationIdentityResolutionTests : TestBase<IdentityResolutionTestsDbContext>
 {
     [Test]
     public async Task
-        _01_IdentityResolution_ForMultipleReferenceForceAggregationsInGraph_ShouldNotAffectAggregationBehavior()
+        _01_IdentityResolution_ForMultipleReferenceAssociationsInGraph_ShouldNotAffectAssociationBehavior()
     {
-        var forceAggregationItem = await CreateForeAggregationItem();
+        var forceAssociationItem = await CreateForeAssociationItem();
 
-        var aggregationClone1 = (ForceAggregationItem)forceAggregationItem.Clone();
-        aggregationClone1.Text = "1ShouldNotBePersisted";
+        var associationClone1 = (AssociationItem)forceAssociationItem.Clone();
+        associationClone1.Text = "1ShouldNotBePersisted";
 
-        var aggregationClone2 = (ForceAggregationItem)forceAggregationItem.Clone();
-        aggregationClone2.Text = "2ShouldNotBePersisted";
+        var associationClone2 = (AssociationItem)forceAssociationItem.Clone();
+        associationClone2.Text = "2ShouldNotBePersisted";
 
-        var root = new MultiForceAggregationRoot
+        var root = new MultiAssociationRoot
         {
-            Text = "AggregationRoot",
-            AggregationItem = aggregationClone1,
+            Text = "AssociationRoot",
+            AssociationItem = associationClone1,
             CompositionItem = new CompositionItem
             {
                 Text = "CompositionItem",
-                AggregationItem = aggregationClone2
+                AssociationItem = associationClone2
             }
         };
 
@@ -35,28 +35,28 @@ public class MultipleReferenceForceAggregationIdentityResolutionTests : TestBase
             await dbContext.SaveChangesAsync();
         }
 
-        MultiForceAggregationRoot clonedRootFromDb;
+        MultiAssociationRoot clonedRootFromDb;
         await using (var dbContext = new IdentityResolutionTestsDbContext())
         {
-            var rootFromDb = await GetForceAggregationRootFromDb(dbContext, root.Id);
+            var rootFromDb = await GetAssociationRootFromDb(dbContext, root.Id);
 
-            clonedRootFromDb = (MultiForceAggregationRoot)rootFromDb.Clone();
+            clonedRootFromDb = (MultiAssociationRoot)rootFromDb.Clone();
 
             Assert.Multiple(() =>
             {
-                Assert.That(rootFromDb.AggregationItem, Is.Not.Null);
-                Assert.That(rootFromDb.AggregationItem!.Id, Is.EqualTo(forceAggregationItem.Id));
-                Assert.That(rootFromDb.AggregationItem.Text, Is.EqualTo(forceAggregationItem.Text));
+                Assert.That(rootFromDb.AssociationItem, Is.Not.Null);
+                Assert.That(rootFromDb.AssociationItem!.Id, Is.EqualTo(forceAssociationItem.Id));
+                Assert.That(rootFromDb.AssociationItem.Text, Is.EqualTo(forceAssociationItem.Text));
             });
 
             Assert.Multiple(() =>
             {
-                Assert.That(rootFromDb.CompositionItem.AggregationItem.Id, Is.EqualTo(forceAggregationItem.Id));
-                Assert.That(rootFromDb.CompositionItem.AggregationItem.Text, Is.EqualTo(forceAggregationItem.Text));
+                Assert.That(rootFromDb.CompositionItem.AssociationItem.Id, Is.EqualTo(forceAssociationItem.Id));
+                Assert.That(rootFromDb.CompositionItem.AssociationItem.Text, Is.EqualTo(forceAssociationItem.Text));
             });
         }
 
-        clonedRootFromDb.CompositionItem.AggregationItem = null;
+        clonedRootFromDb.CompositionItem.AssociationItem = null;
 
         await using (var dbContext = new IdentityResolutionTestsDbContext())
         {
@@ -66,39 +66,39 @@ public class MultipleReferenceForceAggregationIdentityResolutionTests : TestBase
 
         await using (var dbContext = new IdentityResolutionTestsDbContext())
         {
-            var rootNodeFromDb = await GetForceAggregationRootFromDb(dbContext, clonedRootFromDb.Id);
+            var rootNodeFromDb = await GetAssociationRootFromDb(dbContext, clonedRootFromDb.Id);
 
             Assert.Multiple(() =>
             {
-                Assert.That(rootNodeFromDb.AggregationItem, Is.Not.Null);
-                Assert.That(rootNodeFromDb.AggregationItem!.Id, Is.EqualTo(forceAggregationItem.Id));
-                Assert.That(rootNodeFromDb.AggregationItem.Text, Is.EqualTo(forceAggregationItem.Text));
+                Assert.That(rootNodeFromDb.AssociationItem, Is.Not.Null);
+                Assert.That(rootNodeFromDb.AssociationItem!.Id, Is.EqualTo(forceAssociationItem.Id));
+                Assert.That(rootNodeFromDb.AssociationItem.Text, Is.EqualTo(forceAssociationItem.Text));
             });
 
-            Assert.That(rootNodeFromDb.CompositionItem.AggregationItem, Is.Null);
+            Assert.That(rootNodeFromDb.CompositionItem.AssociationItem, Is.Null);
         }
     }
 
     [Test]
     public async Task
-        _02_IdentityResolution_ForMultipleCollectionForceAggregationsInGraph_ShouldNotAffectAggregationBehavior()
+        _02_IdentityResolution_ForMultipleCollectionAssociationsInGraph_ShouldNotAffectAssociationBehavior()
     {
-        var forceAggregationItem = await CreateForeAggregationItem();
+        var forceAssociationItem = await CreateForeAssociationItem();
 
-        var aggregationClone1 = (ForceAggregationItem)forceAggregationItem.Clone();
-        aggregationClone1.Text = "1ShouldNotBePersisted";
+        var associationClone1 = (AssociationItem)forceAssociationItem.Clone();
+        associationClone1.Text = "1ShouldNotBePersisted";
 
-        var aggregationClone2 = (ForceAggregationItem)forceAggregationItem.Clone();
-        aggregationClone2.Text = "2ShouldNotBePersisted";
+        var associationClone2 = (AssociationItem)forceAssociationItem.Clone();
+        associationClone2.Text = "2ShouldNotBePersisted";
 
-        var root = new MultiForceAggregationRoot
+        var root = new MultiAssociationRoot
         {
-            Text = "AggregationRoot",
-            AggregationItems = { aggregationClone1 },
+            Text = "AssociationRoot",
+            AssociationItems = { associationClone1 },
             CompositionItem = new CompositionItem
             {
                 Text = "CompositionItem",
-                AggregationItems = { aggregationClone2 }
+                AssociationItems = { associationClone2 }
             }
         };
 
@@ -108,29 +108,29 @@ public class MultipleReferenceForceAggregationIdentityResolutionTests : TestBase
             await dbContext.SaveChangesAsync();
         }
 
-        MultiForceAggregationRoot clonedRootFromDb;
+        MultiAssociationRoot clonedRootFromDb;
         await using (var dbContext = new IdentityResolutionTestsDbContext())
         {
-            var rootFromDb = await GetForceAggregationRootFromDb(dbContext, root.Id);
+            var rootFromDb = await GetAssociationRootFromDb(dbContext, root.Id);
 
-            clonedRootFromDb = (MultiForceAggregationRoot)rootFromDb.Clone();
+            clonedRootFromDb = (MultiAssociationRoot)rootFromDb.Clone();
 
             Assert.Multiple(() =>
             {
-                Assert.That(rootFromDb.AggregationItems, Has.Count.EqualTo(1));
-                Assert.That(rootFromDb.AggregationItems[0].Id, Is.EqualTo(forceAggregationItem.Id));
-                Assert.That(rootFromDb.AggregationItems[0].Text, Is.EqualTo(forceAggregationItem.Text));
+                Assert.That(rootFromDb.AssociationItems, Has.Count.EqualTo(1));
+                Assert.That(rootFromDb.AssociationItems[0].Id, Is.EqualTo(forceAssociationItem.Id));
+                Assert.That(rootFromDb.AssociationItems[0].Text, Is.EqualTo(forceAssociationItem.Text));
             });
 
             Assert.Multiple(() =>
             {
-                Assert.That(rootFromDb.CompositionItem.AggregationItems, Has.Count.EqualTo(1));
-                Assert.That(rootFromDb.CompositionItem.AggregationItems[0].Id, Is.EqualTo(forceAggregationItem.Id));
-                Assert.That(rootFromDb.CompositionItem.AggregationItems[0].Text, Is.EqualTo(forceAggregationItem.Text));
+                Assert.That(rootFromDb.CompositionItem.AssociationItems, Has.Count.EqualTo(1));
+                Assert.That(rootFromDb.CompositionItem.AssociationItems[0].Id, Is.EqualTo(forceAssociationItem.Id));
+                Assert.That(rootFromDb.CompositionItem.AssociationItems[0].Text, Is.EqualTo(forceAssociationItem.Text));
             });
         }
 
-        clonedRootFromDb.CompositionItem.AggregationItems.Clear();
+        clonedRootFromDb.CompositionItem.AssociationItems.Clear();
 
         await using (var dbContext = new IdentityResolutionTestsDbContext())
         {
@@ -140,41 +140,41 @@ public class MultipleReferenceForceAggregationIdentityResolutionTests : TestBase
 
         await using (var dbContext = new IdentityResolutionTestsDbContext())
         {
-            var rootNodeFromDb = await GetForceAggregationRootFromDb(dbContext, clonedRootFromDb.Id);
+            var rootNodeFromDb = await GetAssociationRootFromDb(dbContext, clonedRootFromDb.Id);
 
             Assert.Multiple(() =>
             {
-                Assert.That(rootNodeFromDb.AggregationItems, Has.Count.EqualTo(1));
-                Assert.That(rootNodeFromDb.AggregationItems[0].Id, Is.EqualTo(forceAggregationItem.Id));
-                Assert.That(rootNodeFromDb.AggregationItems[0].Text, Is.EqualTo(forceAggregationItem.Text));
+                Assert.That(rootNodeFromDb.AssociationItems, Has.Count.EqualTo(1));
+                Assert.That(rootNodeFromDb.AssociationItems[0].Id, Is.EqualTo(forceAssociationItem.Id));
+                Assert.That(rootNodeFromDb.AssociationItems[0].Text, Is.EqualTo(forceAssociationItem.Text));
             });
 
-            Assert.That(rootNodeFromDb.CompositionItem.AggregationItems, Is.Empty);
+            Assert.That(rootNodeFromDb.CompositionItem.AssociationItems, Is.Empty);
         }
     }
 
-    private async Task<ForceAggregationItem> CreateForeAggregationItem()
+    private async Task<AssociationItem> CreateForeAssociationItem()
     {
-        var forceAggregationItem = new ForceAggregationItem
+        var forceAssociationItem = new AssociationItem
         {
-            Text = "ForceAggregationItem"
+            Text = "AssociationItem"
         };
 
         await using var dbContext = new IdentityResolutionTestsDbContext();
-        dbContext.Add(forceAggregationItem);
+        dbContext.Add(forceAssociationItem);
         await dbContext.SaveChangesAsync();
 
-        return forceAggregationItem;
+        return forceAssociationItem;
     }
 
-    private async Task<MultiForceAggregationRoot> GetForceAggregationRootFromDb(
+    private async Task<MultiAssociationRoot> GetAssociationRootFromDb(
         IdentityResolutionTestsDbContext dbContext, int id)
     {
-        return await dbContext.MultiForceAggregationRoots
-            .Include(rn => rn.AggregationItems)
-            .Include(rn => rn.AggregationItem)
-            .Include(rn => rn.CompositionItem.AggregationItem)
-            .Include(rn => rn.CompositionItem.AggregationItems)
+        return await dbContext.MultiAssociationRoots
+            .Include(rn => rn.AssociationItems)
+            .Include(rn => rn.AssociationItem)
+            .Include(rn => rn.CompositionItem.AssociationItem)
+            .Include(rn => rn.CompositionItem.AssociationItems)
             .SingleAsync(rn => rn.Id == id);
     }
 }

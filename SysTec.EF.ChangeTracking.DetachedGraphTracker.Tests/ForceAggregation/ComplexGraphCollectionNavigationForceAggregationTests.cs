@@ -1,38 +1,38 @@
 using Microsoft.EntityFrameworkCore;
-using SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.ForceAggregation.Database;
-using SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.ForceAggregation.Models;
-using SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.ForceAggregation.Models.CollectionNavigation;
+using SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.Association.Database;
+using SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.Association.Models;
+using SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.Association.Models.CollectionNavigation;
 
-namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.ForceAggregation;
+namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.Association;
 
-public class ComplexGraphCollectionNavigationForceAggregationTests : TestBase<ForceAggregationTestsDbContext>
+public class ComplexGraphCollectionNavigationAssociationTests : TestBase<AssociationTestsDbContext>
 {
     [Test]
-    public async Task _01_Changes_InForceAggregationSubtree_ShouldNotBePersisted()
+    public async Task _01_Changes_InAssociationSubtree_ShouldNotBePersisted()
     {
         var rootNode = GetRootNode();
 
-        await using (var dbContext = new ForceAggregationTestsDbContext())
+        await using (var dbContext = new AssociationTestsDbContext())
         {
             dbContext.Add(rootNode);
             await dbContext.SaveChangesAsync();
         }
 
-        var rootNodeUpdate = (ForceAggregationCollectionComplexRootNode)rootNode.Clone();
+        var rootNodeUpdate = (AssociationCollectionComplexRootNode)rootNode.Clone();
         rootNodeUpdate.Text = "RootNodeUpdate";
         rootNodeUpdate.SubTreeRoot.Text = "SubTreeRootUpdate";
         rootNodeUpdate.SubTreeRoot.ItemsL1[0].Text = "ItemL1Update";
         rootNodeUpdate.SubTreeRoot.ItemsL1[0].ItemsL2[0].Text = "ItemL2Update";
 
-        await using (var dbContext = new ForceAggregationTestsDbContext())
+        await using (var dbContext = new AssociationTestsDbContext())
         {
             var graphTracker = GetGraphTrackerInstance(dbContext); await graphTracker.TrackGraphAsync(rootNodeUpdate);
             await dbContext.SaveChangesAsync();
         }
 
-        await using (var dbContext = new ForceAggregationTestsDbContext())
+        await using (var dbContext = new AssociationTestsDbContext())
         {
-            var rootNodeFromDb = await dbContext.ForceAggregationComplexCollectionComplexRootNodes
+            var rootNodeFromDb = await dbContext.AssociationComplexCollectionComplexRootNodes
                 .Include(x => x.SubTreeRoot)
                 .ThenInclude(x => x.ItemsL1)
                 .ThenInclude(x => x.ItemsL2)
@@ -51,28 +51,28 @@ public class ComplexGraphCollectionNavigationForceAggregationTests : TestBase<Fo
     }
 
     [Test]
-    public async Task _02_Relationships_InForceAggregationSubtree_ShouldNotBeDissolved()
+    public async Task _02_Relationships_InAssociationSubtree_ShouldNotBeDissolved()
     {
         var rootNode = GetRootNode();
 
-        await using (var dbContext = new ForceAggregationTestsDbContext())
+        await using (var dbContext = new AssociationTestsDbContext())
         {
             dbContext.Add(rootNode);
             await dbContext.SaveChangesAsync();
         }
 
-        var rootNodeUpdate = (ForceAggregationCollectionComplexRootNode)rootNode.Clone();
+        var rootNodeUpdate = (AssociationCollectionComplexRootNode)rootNode.Clone();
         rootNodeUpdate.SubTreeRoot.ItemsL1[0].ItemsL2.Clear();
 
-        await using (var dbContext = new ForceAggregationTestsDbContext())
+        await using (var dbContext = new AssociationTestsDbContext())
         {
             var graphTracker = GetGraphTrackerInstance(dbContext); await graphTracker.TrackGraphAsync(rootNodeUpdate);
             await dbContext.SaveChangesAsync();
         }
 
-        await using (var dbContext = new ForceAggregationTestsDbContext())
+        await using (var dbContext = new AssociationTestsDbContext())
         {
-            var rootNodeFromDb = await dbContext.ForceAggregationComplexCollectionComplexRootNodes
+            var rootNodeFromDb = await dbContext.AssociationComplexCollectionComplexRootNodes
                 .Include(x => x.SubTreeRoot)
                 .ThenInclude(x => x.ItemsL1)
                 .ThenInclude(x => x.ItemsL2)
@@ -91,24 +91,24 @@ public class ComplexGraphCollectionNavigationForceAggregationTests : TestBase<Fo
     }
 
     [Test]
-    public async Task _03_Relationships_InForceAggregationSubtree_ShouldNotBeConnected()
+    public async Task _03_Relationships_InAssociationSubtree_ShouldNotBeConnected()
     {
-        var itemL1 = new ForceAggregationCollectionSubTreeItemL1
+        var itemL1 = new AssociationCollectionSubTreeItemL1
         {
             Text = "ItemL1"
         };
 
-        var itemL2 = new ForceAggregationSubTreeItemL2
+        var itemL2 = new AssociationSubTreeItemL2
         {
             Text = "ItemL2"
         };
 
-        var subTreeRootItem = new ForceAggregationCollectionSubTreeRoot
+        var subTreeRootItem = new AssociationCollectionSubTreeRoot
         {
             Text = "SubTreeRoot"
         };
 
-        await using (var dbContext = new ForceAggregationTestsDbContext())
+        await using (var dbContext = new AssociationTestsDbContext())
         {
             dbContext.Add(itemL1);
             dbContext.Add(itemL2);
@@ -117,24 +117,24 @@ public class ComplexGraphCollectionNavigationForceAggregationTests : TestBase<Fo
         }
 
         // Clone to have another instance and to simulate a remote scenario
-        var subTreeRootClone = (ForceAggregationCollectionSubTreeRoot)subTreeRootItem.Clone();
-        subTreeRootClone.ItemsL1.Add((ForceAggregationCollectionSubTreeItemL1)itemL1.Clone());
-        subTreeRootClone.ItemsL1[0].ItemsL2.Add((ForceAggregationSubTreeItemL2)itemL2.Clone());
-        var rootNode = new ForceAggregationCollectionComplexRootNode
+        var subTreeRootClone = (AssociationCollectionSubTreeRoot)subTreeRootItem.Clone();
+        subTreeRootClone.ItemsL1.Add((AssociationCollectionSubTreeItemL1)itemL1.Clone());
+        subTreeRootClone.ItemsL1[0].ItemsL2.Add((AssociationSubTreeItemL2)itemL2.Clone());
+        var rootNode = new AssociationCollectionComplexRootNode
         {
             Text = "RootNode",
             SubTreeRoot = subTreeRootClone
         };
 
-        await using (var dbContext = new ForceAggregationTestsDbContext())
+        await using (var dbContext = new AssociationTestsDbContext())
         {
             var graphTracker = GetGraphTrackerInstance(dbContext); await graphTracker.TrackGraphAsync(rootNode);
             await dbContext.SaveChangesAsync();
         }
 
-        await using (var dbContext = new ForceAggregationTestsDbContext())
+        await using (var dbContext = new AssociationTestsDbContext())
         {
-            var rootNodeFromDb = await dbContext.ForceAggregationComplexCollectionComplexRootNodes
+            var rootNodeFromDb = await dbContext.AssociationComplexCollectionComplexRootNodes
                 .Include(r => r.SubTreeRoot)
                 .ThenInclude(sn => sn.ItemsL1)
                 .ThenInclude(sn => sn.ItemsL2)
@@ -144,9 +144,9 @@ public class ComplexGraphCollectionNavigationForceAggregationTests : TestBase<Fo
             Assert.That(rootNodeFromDb.SubTreeRoot.ItemsL1, Is.Empty);
         }
 
-        await using (var dbContext = new ForceAggregationTestsDbContext())
+        await using (var dbContext = new AssociationTestsDbContext())
         {
-            var itemL1FromDb = await dbContext.Set<ForceAggregationCollectionSubTreeItemL1>()
+            var itemL1FromDb = await dbContext.Set<AssociationCollectionSubTreeItemL1>()
                 .Include(i => i.ItemsL2)
                 .SingleAsync(i => i.Id == itemL1.Id);
 
@@ -155,20 +155,20 @@ public class ComplexGraphCollectionNavigationForceAggregationTests : TestBase<Fo
     }
 
 
-    private ForceAggregationCollectionComplexRootNode GetRootNode()
+    private AssociationCollectionComplexRootNode GetRootNode()
     {
-        return new ForceAggregationCollectionComplexRootNode
+        return new AssociationCollectionComplexRootNode
         {
             Text = "RootNode",
-            SubTreeRoot = new ForceAggregationCollectionSubTreeRoot
+            SubTreeRoot = new AssociationCollectionSubTreeRoot
             {
                 Text = "SubTreeRoot",
-                ItemsL1 = new List<ForceAggregationCollectionSubTreeItemL1>
+                ItemsL1 = new List<AssociationCollectionSubTreeItemL1>
                 {
                     new()
                     {
                         Text = "ItemL1_1",
-                        ItemsL2 = new List<ForceAggregationSubTreeItemL2>
+                        ItemsL2 = new List<AssociationSubTreeItemL2>
                         {
                             new()
                             {
