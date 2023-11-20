@@ -25,9 +25,15 @@ dbContext.Attach(RootNode);
 * The third problem is severing 1:many or many:many relationships by just removing items from a detached collection ont the client side.<br/>
   Another example makes this clear:
   ``` c#
-  // First Request
+  // First Request -> New Item will get Id 1
   RootNode
-  └── List<Item>: {Id: 0, Text "This will be Added"}
+  └── List<Item>: {Id: 0, "This will be Added"}
 
-  // Second Request
+  // Second Request -> New Item will get Id 2
+  RootNode
+  └── List<Item>: {Id: 1, "This will be Modified"}, {Id: 0, "This will be Added"}
+
+  // Third Request -> Only the text of Item with Id 2 will change. Nothing else. No relationship gets severed.
+  RootNode
+  └── List<Item>: {Id: 2, "This will be Modified"}
   ```
