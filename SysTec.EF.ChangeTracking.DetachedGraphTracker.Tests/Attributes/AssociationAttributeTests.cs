@@ -7,7 +7,7 @@ using SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.Attributes.Models.Asso
 
 namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.Attributes;
 
-public class AssociationAttributeTests : TestBase<AttributeTestsDbContext>
+public class UpdateAssociationOnlyTests : TestBase<AttributeTestsDbContext>
 {
     [Test]
     public async Task _01_AssociationAttribute_IsRecognized_OnCollection_WithBackReference_ToAbstractBaseType()
