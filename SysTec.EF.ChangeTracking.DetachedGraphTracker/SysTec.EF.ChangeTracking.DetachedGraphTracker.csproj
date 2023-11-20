@@ -6,11 +6,18 @@
         <Nullable>enable</Nullable>
         <RootNamespace>SysTec.EF.ChangeTracking.DetachedGraphTracker</RootNamespace>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <PackageId>SysTec.Internal.GraphTracker</PackageId>
-        <Version>0.1.6</Version>
-        <Title>GraphTracker</Title>
-        <Authors>SysTec Computer GmbH</Authors>
-        <PackageReleaseNotes>- Bugfix: Backreferences are now detected correctly</PackageReleaseNotes>
+        <PackageId>SysTec.EF.ChangeTracking.DetachedGraphTracker</PackageId>
+        <Version>7.0.14</Version>
+        <Title>Detached Graph Tracker</Title>
+        <Authors>Tobias Theiss (SysTec Computer GmbH)</Authors>
+        <PackageReleaseNotes>- Release for EF Core 7.0.14</PackageReleaseNotes>
+        <Description>A library to support easier change tracking of a complex detached graph with EF-Core.
+Provides features like automatic identity resolution, automatically severing relationships for missing items in collections and handling of aggregations (associating entity relationships without allowing updates to the entity in a tree)</Description>
+        <PackageProjectUrl>https://github.com/SysTec-Computer-GmbH/EF-Detached-Graph-Tracker</PackageProjectUrl>
+        <PackageIcon>nuget_icon.jpg</PackageIcon>
+        <RepositoryUrl>https://github.com/SysTec-Computer-GmbH/EF-Detached-Graph-Tracker</RepositoryUrl>
+        <PackageTags>EntityFrameworkCore, ChangeTracking, Detached, Graph, ORM</PackageTags>
+        <Company>SysTec Computer GmbH</Company>
     </PropertyGroup>
 
     <ItemGroup>
@@ -20,6 +27,13 @@
         </PackageReference>
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.14" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.11" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="nuget_icon.jpg">
+        <Pack>True</Pack>
+        <PackagePath></PackagePath>
+      </None>
     </ItemGroup>
 
 </Project>
