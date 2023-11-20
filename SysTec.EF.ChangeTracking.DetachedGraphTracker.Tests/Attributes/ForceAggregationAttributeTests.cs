@@ -126,7 +126,7 @@ public class ForceAggregationAttributeTests : TestBase<AttributeTestsDbContext>
 
         if (node.Entry.Entity.GetType() == typeof(ReferenceItemWithBackreferenceToAbstractType))
         {
-            Assert.That(node.InboundNavigationHasForceAggregationAttribute(), Is.True);
+            Assert.That(node.InboundNavigationHasUpdateAssociationOnlyAttribute(), Is.True);
         }
     }
 }

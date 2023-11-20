@@ -5,6 +5,6 @@ namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.ForceAggregation.M
 
 public class RootWithDefaultThrowBehavior : IdBase
 {
-    [ForceAggregation]
+    [UpdateAssociationOnly]
     public Item ItemWithDefaultThrowBehavior { get; set; }
 }

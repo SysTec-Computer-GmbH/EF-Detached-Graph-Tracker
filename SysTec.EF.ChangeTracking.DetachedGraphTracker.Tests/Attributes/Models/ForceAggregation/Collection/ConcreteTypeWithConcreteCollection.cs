@@ -4,6 +4,6 @@ namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.Attributes.Models.
 
 public class ConcreteTypeWithConcreteCollection : AbstractTypeWithAbstractCollection
 {
-    [ForceAggregation]
+    [UpdateAssociationOnly]
     public override List<CollectionItemWithBackreferenceToAbstractType> Items { get; set; } = new();
 }

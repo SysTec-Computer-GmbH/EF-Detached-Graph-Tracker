@@ -7,5 +7,5 @@ public class DependentManyItemWithDefinedFkOptionalAggregation : IdBase
 {
     public int? OptionalAggregationId { get; set; }
 
-    [ForceAggregation] public OneItem? OptionalAggregation { get; set; }
+    [UpdateAssociationOnly] public OneItem? OptionalAggregation { get; set; }
 }

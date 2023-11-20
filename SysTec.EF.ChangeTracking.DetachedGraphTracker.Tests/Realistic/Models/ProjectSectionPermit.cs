@@ -7,5 +7,5 @@ public class ProjectSectionPermit : IdBase
 {
     public string Name { get; set; }
 
-    [ForceAggregation] public List<ProjectSection> Sections { get; set; } = new();
+    [UpdateAssociationOnly] public List<ProjectSection> Sections { get; set; } = new();
 }

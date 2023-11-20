@@ -7,7 +7,7 @@ public class RootNodeWithOptionalSimpleListAndForceAggregation : IdBase, IClonea
 {
     public string Text { get; set; }
 
-    [ForceAggregation] public List<OptionalListItem> ListItems { get; set; }
+    [UpdateAssociationOnly] public List<OptionalListItem> ListItems { get; set; }
 
     public object Clone()
     {

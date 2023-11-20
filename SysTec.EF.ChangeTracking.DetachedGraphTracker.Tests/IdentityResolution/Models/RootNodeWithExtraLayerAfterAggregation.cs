@@ -7,7 +7,7 @@ public class RootNodeWithExtraLayerAfterAggregation : IdBase, ICloneable
 {
     public TrackedItem A_Composition { get; set; }
 
-    [ForceAggregation] public ForceAggregationRoot? B_Aggregation { get; set; }
+    [UpdateAssociationOnly] public ForceAggregationRoot? B_Aggregation { get; set; }
 
     public object Clone()
     {

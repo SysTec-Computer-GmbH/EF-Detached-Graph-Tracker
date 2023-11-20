@@ -47,7 +47,7 @@ public class PropertyInitializerTests : TestBase<ImplementationShowcaseTestsDbCo
         await using (var dbContext = new ImplementationShowcaseTestsDbContext())
         {
             var graphTracker = GetGraphTrackerInstance(dbContext); 
-            Assert.ThrowsAsync<AddedForceAggregationException>(async () => await graphTracker.TrackGraphAsync(entity));
+            Assert.ThrowsAsync<AddedAssociationEntryException>(async () => await graphTracker.TrackGraphAsync(entity));
             await dbContext.SaveChangesAsync();
         }
 

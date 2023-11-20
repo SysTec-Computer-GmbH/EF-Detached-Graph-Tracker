@@ -402,7 +402,7 @@ public class RealisticTests
         await using (var dbContext = new TestDbContext())
         {
             var graphTracker = new DetachedGraphTracker(dbContext);
-            Assert.ThrowsAsync<AddedForceAggregationException>(async () => await graphTracker.TrackGraphAsync(offer)); 
+            Assert.ThrowsAsync<AddedAssociationEntryException>(async () => await graphTracker.TrackGraphAsync(offer)); 
             await dbContext.SaveChangesAsync();
         }
 

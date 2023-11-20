@@ -17,7 +17,7 @@ public class ForceAggregationBehaviorTests : TestBase<ForceAggregationTestsDbCon
 
         await using var dbContext = new ForceAggregationTestsDbContext();
         var graphTracker = GetGraphTrackerInstance(dbContext);
-        Assert.ThrowsAsync<AddedForceAggregationException>(async () => await graphTracker.TrackGraphAsync(root));
+        Assert.ThrowsAsync<AddedAssociationEntryException>(async () => await graphTracker.TrackGraphAsync(root));
     }
 
     [Test]

@@ -16,9 +16,9 @@ public class CompositeKeyEntity : ICloneable
 
     public List<CompositeForeignKeyCompositionEntity> B_Composition_Items { get; set; } = new();
 
-    [ForceAggregation] public CompositeForeignKeyAggregationEntity? A_Aggregation_Item { get; set; }
+    [UpdateAssociationOnly] public CompositeForeignKeyAggregationEntity? A_Aggregation_Item { get; set; }
 
-    [ForceAggregation] public List<CompositeForeignKeyAggregationEntity> B_Aggregation_Items { get; set; }
+    [UpdateAssociationOnly] public List<CompositeForeignKeyAggregationEntity> B_Aggregation_Items { get; set; }
 
     public object Clone()
     {

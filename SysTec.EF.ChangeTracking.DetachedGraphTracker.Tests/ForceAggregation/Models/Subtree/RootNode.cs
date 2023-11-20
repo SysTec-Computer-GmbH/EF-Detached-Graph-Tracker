@@ -5,9 +5,9 @@ namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.ForceAggregation.M
 
 public class RootNode : IdBase, ICloneable
 {
-    [ForceAggregation] public AggregationRoot? Aggregation { get; set; }
+    [UpdateAssociationOnly] public AggregationRoot? Aggregation { get; set; }
 
-    [ForceAggregation] public List<AggregationRoot> Aggregations { get; set; } = new();
+    [UpdateAssociationOnly] public List<AggregationRoot> Aggregations { get; set; } = new();
 
     public object Clone()
     {

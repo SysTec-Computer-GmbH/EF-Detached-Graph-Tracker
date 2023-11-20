@@ -7,7 +7,7 @@ public class Project : IdBase
 {
     public string Name { get; set; }
 
-    [ForceAggregation] public Customer? Customer { get; set; }
+    [UpdateAssociationOnly] public Customer? Customer { get; set; }
 
     public List<ProjectSection> Sections { get; set; } = new();
 

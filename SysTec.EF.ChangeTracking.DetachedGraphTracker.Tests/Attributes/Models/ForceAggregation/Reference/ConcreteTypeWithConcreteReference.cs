@@ -6,6 +6,6 @@ public class ConcreteTypeWithConcreteReference : AbstractTypeWithAbstractReferen
 {
     public override int? ItemId { get; set; }
     
-    [ForceAggregation]
+    [UpdateAssociationOnly]
     public override ReferenceItemWithBackreferenceToAbstractType Item { get; set; } 
 }

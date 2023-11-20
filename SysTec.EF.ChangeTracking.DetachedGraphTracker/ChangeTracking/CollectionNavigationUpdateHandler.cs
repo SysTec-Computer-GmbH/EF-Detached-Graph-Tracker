@@ -20,8 +20,8 @@ internal class CollectionNavigationUpdateHandler
 
     internal void PrepareListUpdateHandling(EntityEntryGraphNode node)
     {
-        // If the current node is a ForceAggregation, no updates in the subtree should be made.
-        if (!node.Entry.Collections.Any() || node.IsAggregation()) return;
+        // If the current node is a UpdateAssociationOnly, no updates in the subtree should be made.
+        if (!node.Entry.Collections.Any() || node.IsAssociation()) return;
 
         foreach (var collectionEntry in node.Entry.Collections)
         {

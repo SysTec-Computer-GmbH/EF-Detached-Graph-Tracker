@@ -7,7 +7,7 @@ public class RootNodeWithCompositionAndAggregationOfSameType : IdBase, ICloneabl
 {
     public Item A_Composition_Item { get; set; }
 
-    [ForceAggregation] public List<Item> B_Aggregation_Items { get; set; } = new();
+    [UpdateAssociationOnly] public List<Item> B_Aggregation_Items { get; set; } = new();
 
     public object Clone()
     {

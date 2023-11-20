@@ -78,7 +78,7 @@ public class ListCreateAndUpdateTests : TestBase<ListTestsDbContext>
         await using (var dbContext = new ListTestsDbContext())
         {
             var graphTracker = GetGraphTrackerInstance(dbContext); 
-            Assert.ThrowsAsync<AddedForceAggregationException>(async () => await graphTracker.TrackGraphAsync(rootNode)); 
+            Assert.ThrowsAsync<AddedAssociationEntryException>(async () => await graphTracker.TrackGraphAsync(rootNode)); 
             await dbContext.SaveChangesAsync();
         }
 

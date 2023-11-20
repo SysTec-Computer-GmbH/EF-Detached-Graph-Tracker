@@ -9,9 +9,9 @@ public class AdvancedSubTreeRootNodeWithFirstTrackedComposition : IdBase, IClone
 
     public AdvancedSubTreeNode1? A_CompositionNode { get; set; }
 
-    [ForceAggregation] public AdvancedSubTreeNode1? B_AggregationNode { get; set; }
+    [UpdateAssociationOnly] public AdvancedSubTreeNode1? B_AggregationNode { get; set; }
 
-    [ForceAggregation] public List<AdvancedSubTreeNode1> B_AggregationNodes { get; set; } = new();
+    [UpdateAssociationOnly] public List<AdvancedSubTreeNode1> B_AggregationNodes { get; set; } = new();
 
     public object Clone()
     {

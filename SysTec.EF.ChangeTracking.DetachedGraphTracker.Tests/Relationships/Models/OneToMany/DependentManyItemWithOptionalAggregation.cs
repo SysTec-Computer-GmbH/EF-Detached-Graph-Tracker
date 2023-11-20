@@ -5,5 +5,5 @@ namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.Relationships.Mode
 
 public class DependentManyItemWithOptionalAggregation : IdBase
 {
-    [ForceAggregation] public OneItem? OptionalAggregation { get; set; }
+    [UpdateAssociationOnly] public OneItem? OptionalAggregation { get; set; }
 }

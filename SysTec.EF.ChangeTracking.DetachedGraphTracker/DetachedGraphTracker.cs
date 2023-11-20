@@ -49,7 +49,7 @@ public class DetachedGraphTracker
     /// <listheader><term><b>Tracks a graph of entities:</b></term></listheader>
     /// <item><term>
     /// Sets the state of every entity in the graph in respect to its key value and attributes.
-    /// <seealso cref="ForceAggregationAttribute"/> <seealso cref="ForceDeleteOnMissingEntriesAttribute"/><seealso cref="ForceKeepExistingRelationship"/>
+    /// <seealso cref="UpdateAssociationOnly"/> <seealso cref="ForceDeleteOnMissingEntriesAttribute"/><seealso cref="ForceKeepExistingRelationship"/>
     /// </term></item>
     /// <item><term>Takes care of identity resolution automatically.</term></item>
     /// <item><term>
@@ -65,7 +65,7 @@ public class DetachedGraphTracker
         try
         {
             _dbContext.ChangeTracker.TrackGraph(rootEntity, TrackGraphNode);
-            _identityResolutionHandler.PerformIdentityResolutionForUntrackedAggregations();
+            _identityResolutionHandler.PerformIdentityResolutionForUntrackedAssociations();
             await _collectionNavigationUpdateHandler.TrackListUpdates();
         }
         finally
@@ -78,13 +78,13 @@ public class DetachedGraphTracker
     {
         var hasExistingCompositionInChangeTracker = _changeTrackingHandler.HasExistingCompositionInChangeTracker(node.Entry);
 
-        if (!hasExistingCompositionInChangeTracker && !node.IsAggregation())
+        if (!hasExistingCompositionInChangeTracker && !node.IsAssociation())
         {
             EntityEntryStateHelper.SetStateDependingOnKeyValue(node.Entry);
             NavigationEntryHelper.KeepUnchangedStateForForceUnchangedNavigations(node);
             NavigationEntryHelper.SeverRelationshipsForNullValuesInReferenceNavigations(node);
         }
-        else if (!node.InboundNavigationHasForceAggregationAttribute())
+        else if (!node.InboundNavigationHasUpdateAssociationOnlyAttribute())
         {
             ThrowHelper.ThrowMultipleCompositionException(node.Entry.Entity.GetType());
         }

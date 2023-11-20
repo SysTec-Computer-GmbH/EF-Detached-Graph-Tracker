@@ -39,9 +39,9 @@ internal static class ThrowHelper
         throw new InvalidOperationException(message);
     }
 
-    internal static void ThrowAddedForceAggregationException(TrackedAggregationEntityEntry entityEntry)
+    internal static void ThrowAddedAssociationEntryException(TrackedAssociationEntityEntry entityEntry)
     {
-        throw new AddedForceAggregationException(entityEntry);
+        throw new AddedAssociationEntryException(entityEntry);
     }
 
     internal static void ThrowIfPropertyInfoIsNull(PropertyInfo? propertyInfo)

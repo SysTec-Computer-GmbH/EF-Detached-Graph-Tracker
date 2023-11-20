@@ -5,7 +5,7 @@ namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.IdentityResolution
 
 public class RootNodeWithFirstTrackedAggregationReference : IdBase, ICloneable
 {
-    [ForceAggregation] public TrackedItem? A_Tracked_Item { get; set; }
+    [UpdateAssociationOnly] public TrackedItem? A_Tracked_Item { get; set; }
 
     public TrackedItem B_Tracked_Item { get; set; }
 

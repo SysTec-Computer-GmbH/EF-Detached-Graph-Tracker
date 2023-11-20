@@ -5,11 +5,11 @@ namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.IdentityResolution
 
 public class RootNodeWithReferenceNavigations : IdBase
 {
-    [ForceAggregation] 
+    [UpdateAssociationOnly] 
     public Entity A_Aggregation { get; set; }
 
     public Entity B_Composition { get; set; }
     
-    [ForceAggregation]
+    [UpdateAssociationOnly]
     public Entity C_Aggregation { get; set; }
 }

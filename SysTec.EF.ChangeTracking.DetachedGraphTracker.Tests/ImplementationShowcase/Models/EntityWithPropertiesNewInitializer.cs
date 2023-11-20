@@ -11,7 +11,7 @@ public class EntityWithPropertiesNewInitializer : IdBase
 
     public int? AggregationEntityId { get; set; }
 
-    [ForceAggregation] public Entity? AggregationEntity { get; set; } = new();
+    [UpdateAssociationOnly] public Entity? AggregationEntity { get; set; } = new();
 
     public string Text { get; set; }
 }

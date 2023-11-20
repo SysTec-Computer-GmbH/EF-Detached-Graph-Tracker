@@ -7,5 +7,5 @@ public class ManyEntityOneAggregation : IdBase
 {
     public string? Text { get; set; }
 
-    [ForceAggregation] public List<ManyEntityTwoAggregation> ManyAggregations { get; set; } = new();
+    [UpdateAssociationOnly] public List<ManyEntityTwoAggregation> ManyAggregations { get; set; } = new();
 }

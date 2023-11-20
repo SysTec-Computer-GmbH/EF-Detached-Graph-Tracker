@@ -14,5 +14,5 @@ public class RootNode : IdBase
 
     public string? Text { get; set; }
 
-    [ForceAggregation] public List<Entity> Aggregations { get; set; } = new();
+    [UpdateAssociationOnly] public List<Entity> Aggregations { get; set; } = new();
 }

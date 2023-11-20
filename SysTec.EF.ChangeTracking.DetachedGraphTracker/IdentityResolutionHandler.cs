@@ -14,18 +14,18 @@ internal class IdentityResolutionHandler
         _changeTrackingHandler = changeTrackingHandler;
     }
 
-    internal void PerformIdentityResolutionForUntrackedAggregations()
+    internal void PerformIdentityResolutionForUntrackedAssociations()
     {
-        foreach (var aggregation in _changeTrackingHandler.TrackedAggregationEntityEntries)
+        foreach (var associationEntry in _changeTrackingHandler.TrackedAssociationEntityEntries)
         {
-            var existingEntryFromChangeTracker = ChangeTrackingHelper.FindEntryInChangeTracker(aggregation.EntityEntry);
+            var existingEntryFromChangeTracker = ChangeTrackingHelper.FindEntryInChangeTracker(associationEntry.EntityEntry);
             if (existingEntryFromChangeTracker != null)
-                ReplaceEntry(aggregation.EntityEntry.Entity, aggregation.InboundNavigationEntry!,
+                ReplaceEntry(associationEntry.EntityEntry.Entity, associationEntry.InboundNavigationEntry!,
                     existingEntryFromChangeTracker.Entity);
-            else if (aggregation.EntityEntry.IsKeySet()) aggregation.EntityEntry.SetStateUnchanged();
-            else if (aggregation.AddedForceAggregationBehavior == AddedForceAggregationBehavior.Detach)
-                aggregation.EntityEntry.SetStateDetached();
-            else ThrowHelper.ThrowAddedForceAggregationException(aggregation);
+            else if (associationEntry.EntityEntry.IsKeySet()) associationEntry.EntityEntry.SetStateUnchanged();
+            else if (associationEntry.AddedAssociationEntryBehavior == AddedAssociationEntryBehavior.Detach)
+                associationEntry.EntityEntry.SetStateDetached();
+            else ThrowHelper.ThrowAddedAssociationEntryException(associationEntry);
         }
     }
 

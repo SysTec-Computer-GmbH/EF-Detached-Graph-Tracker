@@ -11,6 +11,4 @@
 9. All attributes must be set on a concrete navigation property. Attributes on abstract properties are ignored.
 
 Notes:
-1. If something is a [ForceAggregation] NOTHING in the subtree can be changed (including relationships)
-2. Only the AggregationRoot (the entry/entries inside the navigation property with [ForceAggregation]) is present in the ChangeTracker
-   All other entities inside the subtree ARE NOT being traversed and thus are NOT PRESENT in the ChangeTracker!
+1. If a node is annotated with a [UpdateAssociationOnly] NOTHING in the subtree can be changed (including relationships)

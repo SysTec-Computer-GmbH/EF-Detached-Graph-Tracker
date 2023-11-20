@@ -6,11 +6,11 @@ namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.IdentityResolution
 
 public class AdvancedPartialSubTreeRootNodeWithFirstTrackedAggregation : IdBase, ICloneable
 {
-    [ForceAggregation] public AdvancedSubTreeNode1? A_Aggregation { get; set; }
+    [UpdateAssociationOnly] public AdvancedSubTreeNode1? A_Aggregation { get; set; }
 
     public AdvancedSubTreeNode2? B_Composition { get; set; }
 
-    [ForceAggregation] public List<AdvancedSubTreeNode1> A_Aggregations { get; set; } = new();
+    [UpdateAssociationOnly] public List<AdvancedSubTreeNode1> A_Aggregations { get; set; } = new();
 
     public List<AdvancedSubTreeNode2> B_Compositions { get; set; } = new();
 

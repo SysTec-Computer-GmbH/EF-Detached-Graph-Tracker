@@ -5,6 +5,6 @@ namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.ConcurrencyStamps.
 
 public class RootWithConcurrencyItemInForceAggregationReference : IdBase
 {
-    [ForceAggregation]
+    [UpdateAssociationOnly]
     public ItemWithConcurrencyStamp? ItemWithConcurrencyStamp { get; set; }
 }

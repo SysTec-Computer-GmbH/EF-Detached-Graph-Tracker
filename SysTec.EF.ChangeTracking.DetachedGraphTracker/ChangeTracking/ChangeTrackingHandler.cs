@@ -12,8 +12,8 @@ internal class ChangeTrackingHandler
         _trackedEntities = new List<TrackedCompositionEntityEntry>();
     }
 
-    internal List<TrackedAggregationEntityEntry> TrackedAggregationEntityEntries =>
-        _trackedEntities.OfType<TrackedAggregationEntityEntry>().ToList();
+    internal List<TrackedAssociationEntityEntry> TrackedAssociationEntityEntries =>
+        _trackedEntities.OfType<TrackedAssociationEntityEntry>().ToList();
 
     internal void Cleanup()
     {
@@ -22,7 +22,7 @@ internal class ChangeTrackingHandler
 
     internal void AddTrackedEntity(EntityEntryGraphNode node)
     {
-        _trackedEntities.Add(TrackedCompositionEntityEntry.CreateCompositionOrAggregation(node));
+        _trackedEntities.Add(TrackedCompositionEntityEntry.CreateCompositionOrAssociation(node));
     }
 
     internal bool HasExistingCompositionInChangeTracker(EntityEntry entry)

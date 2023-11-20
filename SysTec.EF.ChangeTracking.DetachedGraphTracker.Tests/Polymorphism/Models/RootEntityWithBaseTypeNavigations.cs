@@ -9,11 +9,11 @@ public class RootEntityWithBaseTypeNavigations : IdBase, ICloneable
 
     public BaseEntity? CompositionItem { get; set; }
 
-    [ForceAggregation] public BaseEntity? AggregationItem { get; set; }
+    [UpdateAssociationOnly] public BaseEntity? AggregationItem { get; set; }
 
     public List<BaseEntity> CompositionItems { get; set; } = new();
 
-    [ForceAggregation] public List<BaseEntity> AggregationItems { get; set; } = new();
+    [UpdateAssociationOnly] public List<BaseEntity> AggregationItems { get; set; } = new();
 
     public object Clone()
     {

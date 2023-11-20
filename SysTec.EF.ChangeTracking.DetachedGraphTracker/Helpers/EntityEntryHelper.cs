@@ -46,9 +46,9 @@ internal static class EntityEntryHelper
         return existsInDb;
     }
 
-    internal static bool IsAggregation(this EntityEntryGraphNode node)
+    internal static bool IsAssociation(this EntityEntryGraphNode node)
     {
-        return node.InboundNavigation != null && node.InboundNavigationHasForceAggregationAttribute();
+        return node.InboundNavigation != null && node.InboundNavigationHasUpdateAssociationOnlyAttribute();
     }
 
     private static bool IsTypeNullable(Type? type)

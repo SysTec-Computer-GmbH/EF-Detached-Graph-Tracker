@@ -8,11 +8,11 @@ public class AdvancedPartialSubTreeRootNodeWithFirstTrackedComposition : IdBase,
 {
     public AdvancedSubTreeNode2? A_Composition { get; set; }
 
-    [ForceAggregation] public AdvancedSubTreeNode1? B_Aggregation { get; set; }
+    [UpdateAssociationOnly] public AdvancedSubTreeNode1? B_Aggregation { get; set; }
 
     public List<AdvancedSubTreeNode2> A_Compositions { get; set; } = new();
 
-    [ForceAggregation] public List<AdvancedSubTreeNode1> B_Aggregations { get; set; } = new();
+    [UpdateAssociationOnly] public List<AdvancedSubTreeNode1> B_Aggregations { get; set; } = new();
 
     public object Clone()
     {

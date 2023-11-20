@@ -7,7 +7,7 @@ public class ForceAggregationCollectionComplexRootNode : IdBase, ICloneable
 {
     public string Text { get; set; }
 
-    [ForceAggregation] public ForceAggregationCollectionSubTreeRoot SubTreeRoot { get; set; }
+    [UpdateAssociationOnly] public ForceAggregationCollectionSubTreeRoot SubTreeRoot { get; set; }
 
     public object Clone()
     {

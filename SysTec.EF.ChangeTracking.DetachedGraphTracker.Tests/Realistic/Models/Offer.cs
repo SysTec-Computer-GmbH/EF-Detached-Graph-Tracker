@@ -13,7 +13,7 @@ public class Offer : IdBase
 
     [ForceDeleteOnMissingEntries] public List<OfferPosition> Positions { get; set; } = new();
 
-    [ForceAggregation] public List<Employee> Editors { get; set; } = new();
+    [UpdateAssociationOnly] public List<Employee> Editors { get; set; } = new();
 
-    [ForceAggregation] public Department? IssuingDepartment { get; set; }
+    [UpdateAssociationOnly] public Department? IssuingDepartment { get; set; }
 }

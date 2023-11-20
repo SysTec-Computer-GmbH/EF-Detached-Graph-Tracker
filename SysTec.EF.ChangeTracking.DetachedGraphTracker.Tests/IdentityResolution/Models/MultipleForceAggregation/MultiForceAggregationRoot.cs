@@ -9,9 +9,9 @@ public class MultiForceAggregationRoot : IdBase, ICloneable
 
     public CompositionItem CompositionItem { get; set; }
 
-    [ForceAggregation] public ForceAggregationItem? AggregationItem { get; set; }
+    [UpdateAssociationOnly] public ForceAggregationItem? AggregationItem { get; set; }
 
-    [ForceAggregation] public List<ForceAggregationItem> AggregationItems { get; set; } = new();
+    [UpdateAssociationOnly] public List<ForceAggregationItem> AggregationItems { get; set; } = new();
 
     public object Clone()
     {

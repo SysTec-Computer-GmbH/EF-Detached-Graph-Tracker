@@ -15,10 +15,10 @@ internal class TrackedCompositionEntityEntry
 
     internal EntityEntry EntityEntry { get; private set; }
 
-    internal static TrackedCompositionEntityEntry CreateCompositionOrAggregation(EntityEntryGraphNode trackedNode)
+    internal static TrackedCompositionEntityEntry CreateCompositionOrAssociation(EntityEntryGraphNode trackedNode)
     {
-        return trackedNode.IsAggregation()
-            ? new TrackedAggregationEntityEntry(trackedNode)
+        return trackedNode.IsAssociation()
+            ? new TrackedAssociationEntityEntry(trackedNode)
             : new TrackedCompositionEntityEntry(trackedNode);
     }
 }

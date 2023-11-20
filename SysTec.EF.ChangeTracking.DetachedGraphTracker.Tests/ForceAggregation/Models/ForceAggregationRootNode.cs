@@ -7,7 +7,7 @@ public class ForceAggregationRootNode : IdBase
 {
     public string Text { get; set; }
 
-    [ForceAggregation] public AggregationType? AggregationTypeReference { get; set; }
+    [UpdateAssociationOnly] public AggregationType? AggregationTypeReference { get; set; }
 
-    [ForceAggregation] public List<AggregationType> AggregationTypeCollection { get; set; } = new();
+    [UpdateAssociationOnly] public List<AggregationType> AggregationTypeCollection { get; set; } = new();
 }

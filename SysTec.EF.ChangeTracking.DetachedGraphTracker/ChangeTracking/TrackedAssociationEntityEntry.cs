@@ -4,21 +4,21 @@ using SysTec.EF.ChangeTracking.DetachedGraphTracker.Helpers;
 
 namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.ChangeTracking;
 
-internal class TrackedAggregationEntityEntry : TrackedCompositionEntityEntry
+internal class TrackedAssociationEntityEntry : TrackedCompositionEntityEntry
 {
-    internal TrackedAggregationEntityEntry(EntityEntryGraphNode trackedNode) : base(trackedNode)
+    internal TrackedAssociationEntityEntry(EntityEntryGraphNode trackedNode) : base(trackedNode)
     {
         InboundNavigationEntry = GetInboundNavigationEntry(trackedNode);
-        AddedForceAggregationBehavior = trackedNode.InboundNavigationGetForceAggregationAttributeBehavior();
+        AddedAssociationEntryBehavior = trackedNode.InboundNavigationGetAddedAssociationEntryBehavior();
     }
 
     internal NavigationEntry InboundNavigationEntry { get;}
 
-    internal AddedForceAggregationBehavior AddedForceAggregationBehavior { get; }
+    internal AddedAssociationEntryBehavior AddedAssociationEntryBehavior { get; }
 
     private static NavigationEntry GetInboundNavigationEntry(EntityEntryGraphNode trackedNode)
     {
-        // Note: InboundNavigation cannot be null here, because an aggregation always has a inbound navigation.
+        // Note: InboundNavigation cannot be null here, because an association node always has a inbound navigation.
         ThrowHelper.ThrowIfSourceEntryIsNullAlthoughInboundNavigationIsSet(trackedNode);
         return trackedNode.SourceEntry!.Navigation(trackedNode.InboundNavigation!);
     }

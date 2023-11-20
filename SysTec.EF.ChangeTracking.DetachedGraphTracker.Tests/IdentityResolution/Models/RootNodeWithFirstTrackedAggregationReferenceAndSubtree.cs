@@ -5,7 +5,7 @@ namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.IdentityResolution
 
 public class RootNodeWithFirstTrackedAggregationReferenceAndSubtree : IdBase, ICloneable
 {
-    [ForceAggregation] public SubTreeRootNode? A_Item { get; set; }
+    [UpdateAssociationOnly] public SubTreeRootNode? A_Item { get; set; }
 
     public SubTreeRootNode B_Item { get; set; }
 

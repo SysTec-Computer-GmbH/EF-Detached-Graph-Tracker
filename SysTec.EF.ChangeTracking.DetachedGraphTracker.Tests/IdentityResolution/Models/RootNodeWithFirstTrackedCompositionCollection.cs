@@ -7,7 +7,7 @@ public class RootNodeWithFirstTrackedCompositionCollection : IdBase, ICloneable
 {
     public List<TrackedItem>? A_Tracked_Items { get; set; }
 
-    [ForceAggregation] public TrackedItem? B_Tracked_Item { get; set; }
+    [UpdateAssociationOnly] public TrackedItem? B_Tracked_Item { get; set; }
 
     public object Clone()
     {

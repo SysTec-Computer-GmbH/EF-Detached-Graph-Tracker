@@ -6,6 +6,6 @@ namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.ForceAggregation.M
 
 public class RootWithDetachBehavior : IdBase
 {
-    [ForceAggregation(AddedForceAggregationBehavior.Detach)]
+    [UpdateAssociationOnly(AddedAssociationEntryBehavior.Detach)]
     public Item ItemWithDetachBehavior { get; set; }
 }

@@ -5,5 +5,5 @@ namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.Relationships.Mode
 
 public class DependentItemWithRequiredAggregation : IdBase
 {
-    [ForceAggregation] public PrincipalItemForAggregation RequiredPrincipal { get; set; }
+    [UpdateAssociationOnly] public PrincipalItemForAggregation RequiredPrincipal { get; set; }
 }

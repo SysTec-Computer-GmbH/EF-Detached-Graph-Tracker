@@ -13,22 +13,22 @@ internal static class AttributeHelper
         return navigationPropertyInfo.HasCustomAttribute(typeof(ForceDeleteOnMissingEntriesAttribute));
     }
 
-    internal static bool InboundNavigationHasForceAggregationAttribute(this EntityEntryGraphNode entityEntryGraphNode)
+    internal static bool InboundNavigationHasUpdateAssociationOnlyAttribute(this EntityEntryGraphNode entityEntryGraphNode)
     {
-        var inboundNavigationPropertyInfo = GetNullSafeConcreteInboundNavigationPropertyInfoOrThrow(entityEntryGraphNode, nameof(InboundNavigationHasForceAggregationAttribute));
-        return inboundNavigationPropertyInfo.HasCustomAttribute(typeof(ForceAggregationAttribute));
+        var inboundNavigationPropertyInfo = GetNullSafeConcreteInboundNavigationPropertyInfoOrThrow(entityEntryGraphNode, nameof(InboundNavigationHasUpdateAssociationOnlyAttribute));
+        return inboundNavigationPropertyInfo.HasCustomAttribute(typeof(UpdateAssociationOnly));
     }
     
-    internal static AddedForceAggregationBehavior InboundNavigationGetForceAggregationAttributeBehavior(this EntityEntryGraphNode entityEntryGraphNode)
+    internal static AddedAssociationEntryBehavior InboundNavigationGetAddedAssociationEntryBehavior(this EntityEntryGraphNode entityEntryGraphNode)
     {
-        var inboundNavigationPropertyInfo = GetNullSafeConcreteInboundNavigationPropertyInfoOrThrow(entityEntryGraphNode, nameof(InboundNavigationGetForceAggregationAttributeBehavior));
+        var inboundNavigationPropertyInfo = GetNullSafeConcreteInboundNavigationPropertyInfoOrThrow(entityEntryGraphNode, nameof(InboundNavigationGetAddedAssociationEntryBehavior));
         
-        if (!entityEntryGraphNode.InboundNavigationHasForceAggregationAttribute())
+        if (!entityEntryGraphNode.InboundNavigationHasUpdateAssociationOnlyAttribute())
             // TODO: Export to throw helper
             ThrowHelper.ThrowInvalidOperationException(
-                $"The navigation {inboundNavigationPropertyInfo.Name} does not have a {nameof(ForceAggregationAttribute)} but the method {nameof(InboundNavigationGetForceAggregationAttributeBehavior)} was called.");
-        var forceAggregationAttribute = inboundNavigationPropertyInfo.GetCustomAttribute<ForceAggregationAttribute>();
-        return forceAggregationAttribute!.AddedForceAggregationBehavior;
+                $"The navigation {inboundNavigationPropertyInfo.Name} does not have a {nameof(UpdateAssociationOnly)} but the method {nameof(InboundNavigationGetAddedAssociationEntryBehavior)} was called.");
+        var updateAssociationOnlyAttribute = inboundNavigationPropertyInfo.GetCustomAttribute<UpdateAssociationOnly>();
+        return updateAssociationOnlyAttribute!.AddedAssociationEntryBehavior;
     }
     
     internal static bool HasForceUnchangedAttribute(this NavigationEntry navigationEntry)

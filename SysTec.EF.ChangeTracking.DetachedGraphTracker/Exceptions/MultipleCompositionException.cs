@@ -9,7 +9,7 @@ public class MultipleCompositionException : GraphHandlerException
 {
     internal MultipleCompositionException(Type type)
         : base(
-            $"Multiple compositions found for type {type.Name}. Only one composition per graph is allowed. Please use the {nameof(ForceAggregationAttribute)} to have multiple nodes of the same type.")
+            $"Multiple compositions found for type {type.Name}. Only one composition per graph is allowed. Please use the {nameof(UpdateAssociationOnly)} to have multiple nodes of the same type.")
     {
     }
 }
