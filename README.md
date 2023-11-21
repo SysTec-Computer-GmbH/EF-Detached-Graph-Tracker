@@ -4,6 +4,17 @@ A library to support easier change tracking of a complex detached graph with EF-
 It handles the change tracking of a complex detached graph using pure vanilla EF-Core.
 Let's begin by listing the three main problems EF-Core has with updating detached graphs.
 
+### Why does this library depend on a postreSQL NuGet-Package?
+1. EF supports database generated values. For example a number may be generated on INSERT and may not be overwritten by an UPDATE statement (number may not be present in the statement).
+2. EF also supports looking up if a value is database generated for every property on an entity entry (```property.Metadata.ValueGenerated```).<br/>
+
+The problem is that when using postgreSQL´s ```UseIdentityAlwaysColumn()``` the value of ```Metadata.ValueGenerated``` is set to ```ValueGenerated.OnAdd``` (what would still be correct in this case).<br/>
+When setting ```UseIdentityByDefaultColumn()``` the value of ```Metadata.ValueGenerated``` is also set to ```ValueGenerated.OnAdd``` which is incorrect because the value can be overwritten in a update statement.
+<br/> <br/>
+So relying on the ```Metadata.ValueGenerated``` property is not possible.<br/> PostgreSQL provides the method ```Metadata.GetValueGenerationStrategy()``` to find out what strategy is used.
+The documentation states that when no PostreSQL specific strategy is found, it defaults to the IModel of EF, so even when using a different provider the library should work (except when they also don´t set ```Metadata.ValueGenerated``` correctly).
+In this case generated values (except key values, ef manges them correctly) must be handled by custom code (set to ```Unchanged``` on update).
+
 ### EF-Core Detached Graph Problems
 * Identity Resolution: When attaching a graph to the change tracker, the caller needs to assure that the graph contains only one element of the same type and the same key.<br/>
   See following example:
