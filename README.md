@@ -89,7 +89,7 @@ dbContext.Attach(RootNode);
   
   4. ```[ForceKeepExistingRelationship]```: There may be cases where a navigation property is needed for logic in the backend but is never seen from the client because it may be ignored in a DTO for example.
      Now when the client sends back the data to the server, the value of the "hidden" navigation property is null and the relationship would be severed by the ```TrackGraphAsync()``` method.
-     In case this behavior is unwanted, the attribute keeps the existing relationship if the value is null (or the item is missing in a collection navigation).
+     In case this behavior is unwanted, use the attribute to keep the existing relationship if the value is null (or the item is missing in a collection navigation).
      Important: New relationships can always be connected even when this attribute is set. Also when providing a valid entity to a reference navigation annotated with this attribute, the relationship also gets changed.
 
 ### How does the library work (in a more detailed way)
