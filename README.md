@@ -56,6 +56,10 @@ dbContext.Attach(RootNode);
 ### How does the library work (in a more detailed way)
 1. After the call to ```graphTrackerInstance.TrackGraphAsync(rootNode)``` graph traversal is performed using the ```ChangeTracker.TrackGraph()``` method.
 2. In the callback it is first determined if the entity is already present in the change tracker.
-   1. If it is, Identity Resolution will be performed which means that any entities with the same type and same key out of nodes annotated with the ```[UpdateAssociationOnly]``` attribute are "replaced" with an entity out of the node that is not annotated with the attribute.<br/>
+   1. If it is, and the current node is not annotated with an ```[UpdateAssociationOnly]``` attribute, an exception will be thrown, because in this case multiple nodes of the same type with the same key value are present in the graph and are not annotated with an ```[UpdateAssociationOnly]``` attribute.<br/>
    2. If it´s not, and the node is not annotated with an ```[UpdateAssociationOnly]``` attribute, the state will be set depending on the key value of the entity (Id > 0 -> ```Modified```, otherwise ```Added```) <br/>
-   3. If it´s not, and the node is annotated with an ```[UpdateAssociationOnly]``` attribute, the entity will be kept in a detached state and stored in a list to be handled later 
+   3. If it´s not, and the node is annotated with an ```[UpdateAssociationOnly]``` attribute, the entity will be kept in a detached state and stored in a list to be handled later .
+3. After the graph traversal is finished, Identity Resolution is now performed for the yet detached association entities (2.iii).
+   1. It an entity of the same type and key as the association is already present in the change tracker, the association gets "replaced" with the entity from the change tracker because only entities that are not annotated with the ```[UpdateAssociationOnly]``` attribute are present in the change tracker (2.ii)
+   2. If no entity of the same type and key as the association is present in the change tracker and the key value of the association is set (e. g. Id > 0), it will be tracked in an ``Ùnchanged``` state.
+   3. If no entity of the same type and key as the association is present in the change tracker and the key value of the association is not set (e. g. Id < 0) the entity will remain in the ```Detached``` state or an exception will be thrown, depending on the parameter passed to the ```[UpdateAssociationOnly]``` attribute.
