@@ -19,6 +19,7 @@ Provides features like automatic identity resolution, automatically severing rel
         <RepositoryUrl>https://github.com/SysTec-Computer-GmbH/EF-Detached-Graph-Tracker</RepositoryUrl>
         <PackageTags>EntityFrameworkCore, ChangeTracking, Detached, Graph, ORM</PackageTags>
         <Company>SysTec Computer GmbH</Company>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -28,6 +29,7 @@ Provides features like automatic identity resolution, automatically severing rel
         </PackageReference>
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.14" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.11" />
+        <None Include="../README.md" Pack="true" PackagePath="/" />
     </ItemGroup>
 
     <ItemGroup>
