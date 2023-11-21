@@ -58,9 +58,10 @@ dbContext.Attach(RootNode);
 
 ### How to use this library?
 1. Install the nuget package ```SysTec.EF.ChangeTracking.DetachedGraphTracker```
-2. Create a new instance of ```DetachedGraphTracker``` and make sure one instance is used per request (for example register it as a scoped service in a Web-API application)
-3. Call ```graphTrackerInstance.TrackGraphAsync(rootNode);``` with the root of your graph.
-4. After the call every node in the graph that has been traversed using the ```DbContext.ChangeTracker.TrackGraph(object root,  Action<EntityEntryGraphNode> callback)``` method is tracked in a ```Modified```, ```Unchanged```, ```Added``` or ```Deleted``` state. <br/>
+2. Create a new instance of ```DetachedGraphTracker``` and make sure one instance is used per request (for example register it as a scoped service in a Web-API application).
+3. Set attributes in your models.
+4. Call ```graphTrackerInstance.TrackGraphAsync(rootNode);``` with the root of your graph.
+5. After the call every node in the graph that has been traversed using the ```DbContext.ChangeTracker.TrackGraph(object root,  Action<EntityEntryGraphNode> callback)``` method is tracked in a ```Modified```, ```Unchanged```, ```Added``` or ```Deleted``` state. <br/>
    The states depend on the attributes set in the model classes (refer to "Attributes" for details). <br/>
    When no attributes are set, the node is tracked depending on its key value. If the key is set (e. g. Id = 42) the state is set to ```Modified``` otherwise the entity is tracked in an ```Added``` state.
 
