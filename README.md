@@ -53,6 +53,26 @@ dbContext.Attach(RootNode);
    The states depend on the attributes set in the model classes (refer to "Attributes" for details). <br/>
    When no attributes are set, the node is tracked depending on its key value. If the key is set (e. g. Id = 42) the state is set to ```Modified``` otherwise the entity is tracked in an ```Added``` state.
 
+### Attributes
+* This libary provides 3 attributes:
+  1. ```[UpdateAssociationOnly]```
+   ``` c#
+   RootNode
+   └── Item: {Id: 2, "Initial"}
+
+   // This will update RootNode, the relationship between RootNode and Item and the text of Item with Id 2.
+   await graphTrackerInstance.TrackGraphAsync(RootNode);
+   ```
+   ``` c#
+   RootNode
+   └── [UpdateAssociationOnly] Item: {Id: 2, "Updated"}
+
+   // This will update RootNode and the relationship between RootNode and Item. The text is not being updated.
+   await graphTrackerInstance.TrackGraphAsync(RootNode);
+   ```
+  2. ```[ForceDeleteOnMissingEntries]```
+  3. ```[ForceKeepExistingRelationship]```
+
 ### How does the library work (in a more detailed way)
 1. After the call to ```graphTrackerInstance.TrackGraphAsync(rootNode)``` graph traversal is performed using the ```ChangeTracker.TrackGraph()``` method.
 2. In the callback it is first determined if the entity is already present in the change tracker.
@@ -63,3 +83,5 @@ dbContext.Attach(RootNode);
    1. It an entity of the same type and key as the association is already present in the change tracker, the association gets "replaced" with the entity from the change tracker because only entities that are not annotated with the ```[UpdateAssociationOnly]``` attribute are present in the change tracker (2.ii)
    2. If no entity of the same type and key as the association is present in the change tracker and the key value of the association is set (e. g. Id > 0), it will be tracked in an ``Ùnchanged``` state.
    3. If no entity of the same type and key as the association is present in the change tracker and the key value of the association is not set (e. g. Id < 0) the entity will remain in the ```Detached``` state or an exception will be thrown, depending on the parameter passed to the ```[UpdateAssociationOnly]``` attribute.
+4. Finally list items that are not present in collection navigations in the graph, but still are in the original collection loaded from the database, are removed using the ```collection.Remove()``` method on the original collection. <br/>
+   This way the change tracker is aware of the change in the collection an relationships are severed. Cascading actions may occur depending on the configuration of the relationships and the configured delete behaviors.
