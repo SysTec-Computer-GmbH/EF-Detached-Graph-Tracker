@@ -61,7 +61,7 @@ dbContext.Attach(RootNode);
 2. Create a new instance of ```DetachedGraphTracker``` and make sure one instance is used per request (for example register it as a scoped service in a Web-API application).
 3. Set attributes in your models.
 4. Call ```graphTrackerInstance.TrackGraphAsync(rootNode);``` with the root of your graph.
-5. After the call every node in the graph that has been traversed using the ```DbContext.ChangeTracker.TrackGraph(object root,  Action<EntityEntryGraphNode> callback)``` method is tracked in a ```Modified```, ```Unchanged```, ```Added``` or ```Deleted``` state. <br/>
+5. After the call every node in the graph that has been traversed is tracked in a ```Modified```, ```Unchanged```, ```Added``` or ```Deleted``` state. <br/>
    The states depend on the attributes set in the model classes (refer to "Attributes" for details). <br/>
    When no attributes are set, the node is tracked depending on its key value. If the key is set (e. g. Id = 42) the state is set to ```Modified``` otherwise the entity is tracked in an ```Added``` state.
 
@@ -105,7 +105,7 @@ dbContext.Attach(RootNode);
      Important: New relationships can always be connected even when this attribute is set. Also when providing a valid entity to a reference navigation annotated with this attribute, the relationship also gets changed.
 
 ### How does the library work (in a more detailed way)
-1. After the call to ```graphTrackerInstance.TrackGraphAsync(rootNode)``` graph traversal is performed using the ```ChangeTracker.TrackGraph()``` method.
+1. After the call to ```graphTrackerInstance.TrackGraphAsync(rootNode)``` graph traversal is performed using the ```DbContext.ChangeTracker.TrackGraph(object root,  Action<EntityEntryGraphNode> callback)``` method.
 2. In the callback it is first determined if the entity is already present in the change tracker.
    1. If it is, and the current node is not annotated with an ```[UpdateAssociationOnly]``` attribute, an exception will be thrown, because in this case multiple nodes of the same type with the same key value are present in the graph and are not annotated with an ```[UpdateAssociationOnly]``` attribute.<br/>
    2. If it´s not, and the node is not annotated with an ```[UpdateAssociationOnly]``` attribute, the state will be set depending on the key value of the entity (Id > 0 -> ```Modified```, otherwise ```Added```) <br/>
