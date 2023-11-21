@@ -62,16 +62,35 @@ dbContext.Attach(RootNode);
 
    // This will update RootNode, the relationship between RootNode and Item and the text of Item with Id 2.
    await graphTrackerInstance.TrackGraphAsync(RootNode);
-   ```
-   ``` c#
+
    RootNode
    └── [UpdateAssociationOnly] Item: {Id: 2, "Updated"}
 
    // This will update RootNode and the relationship between RootNode and Item. The text is not being updated.
    await graphTrackerInstance.TrackGraphAsync(RootNode);
    ```
-  2. ```[ForceDeleteOnMissingEntries]```
-  3. ```[ForceKeepExistingRelationship]```
+   ``` c#
+   RootNode
+   ├── Item: {Id: 1, Text: "This text should be persisted"}
+   └── List<Item>: {Id: 1, Text "This text should not be persisted"}, {...}
+  
+   // Throws MultipleCompositionException
+   await graphTrackerInstance.TrackGraphAsync(RootNode);
+
+   RootNode
+   ├── Item: {Id: 1, Text: "This text should be persisted"}
+   └── [UpdateAssociationOnly] List<Item>: {Id: 1, Text "This text should not be persisted"}, {...}
+  
+   // Does not throw, updates Text of Item with Id 1 to "This text should be persisted" and updates both relationships between Item and RootNode.
+   await graphTrackerInstance.TrackGraphAsync(RootNode);
+   ```
+  2. ```[ForceDeleteOnMissingEntries]```: In some cases relationships are configured to be non required (e. g. for TPH configuration where multiple types get mapped to a singe table) but should not exist in the database when the relationship to their principal is severed. <br/>
+     Therefore this attribute sets the state of all entities, that are missing in a collection navigation but are still present in the original database collection, to ```Deleted```. This overrides the default behavior of the change detection for collection entries.
+  
+  4. ```[ForceKeepExistingRelationship]```: There may be cases where a navigation property is needed for logic in the backend but is never seen from the client because it may be ignored in a DTO for example.
+     Now when the client sends back the data to the server, the value of the "hidden" navigation property is null and the relationship would be severed by the ```TrackGraphAsync()``` method.
+     In case this behavior is unwanted, the attribute keeps the existing relationship if the value is null (or the item is missing in a collection navigation).
+     Important: New relationships can always be connected even when this attribute is set. Also when providing a valid entity to a reference navigation annotated with this attribute, the relationship also gets changed.
 
 ### How does the library work (in a more detailed way)
 1. After the call to ```graphTrackerInstance.TrackGraphAsync(rootNode)``` graph traversal is performed using the ```ChangeTracker.TrackGraph()``` method.
