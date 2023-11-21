@@ -28,6 +28,7 @@ Provides features like automatic identity resolution, automatically severing rel
         </PackageReference>
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.0" />
+        <None Include="../README.md" Pack="true" PackagePath="/" />
     </ItemGroup>
 
     <ItemGroup>
