@@ -36,5 +36,10 @@ public class ForceUnchangedDbContext : DbContextBase
             .WithOne(oi => oi.OptionalItem)
             .HasForeignKey<OptionalOneItemTwo>(oi => oi.OptionalItemId)
             .IsRequired(false);
+
+        modelBuilder.Entity<RootWithOwnedType>()
+            .OwnsOne(r => r.Owned)
+            .HasOne(o => o.OptionalItem)
+            .WithMany();
     }
 }

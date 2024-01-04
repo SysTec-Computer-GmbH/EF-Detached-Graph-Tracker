@@ -6,8 +6,9 @@ namespace SysTec.EF.ChangeTracking.DetachedGraphTracker.Tests.ForceUnchanged;
 
 public class OneToManyRelationships : TestBase<ForceUnchangedDbContext>
 {
+    
     [Test]
-    public async Task _01_HiddenRequiredReferenceNavigationValues_InOneToManyRelationship_AreNotAffectedByChanges_WhenAttributeIsUsed()
+    public async Task _01_RequiredReferenceNavigationValues_InOneToManyRelationship_AreNotAffectedByChanges_WhenAttributeIsUsed()
     {
         var root = new RootWithRequiredReference()
         {
@@ -44,7 +45,7 @@ public class OneToManyRelationships : TestBase<ForceUnchangedDbContext>
     }
     
     [Test]
-    public async Task _02_HiddenOptionalReferenceNavigationValues_InOneToManyRelationship_AreNotAffectedByChanges_WhenAttributeIsUsed()
+    public async Task _02_OptionalReferenceNavigationValues_InOneToManyRelationship_AreNotAffectedByChanges_WhenAttributeIsUsed()
     {
         var root = new RootWithOptionalReference()
         {
@@ -81,7 +82,7 @@ public class OneToManyRelationships : TestBase<ForceUnchangedDbContext>
     }
     
     [Test]
-    public async Task _03_HiddenRequiredCollectionNavigationValues_InOneToManyRelationship_AreNotAffectedByChanges_WhenAttributeIsUsed()
+    public async Task _03_RequiredCollectionNavigationValues_InOneToManyRelationship_AreNotAffectedByChanges_WhenAttributeIsUsed()
     {
         var root = new RootWithRequiredCollection()
         {
@@ -126,7 +127,7 @@ public class OneToManyRelationships : TestBase<ForceUnchangedDbContext>
     }
     
     [Test]
-    public async Task _04_HiddenOptionalCollectionNavigationValues_InOneToManyRelationship_AreNotAffectedByChanges_WhenAttributeIsUsed()
+    public async Task _04_OptionalCollectionNavigationValues_InOneToManyRelationship_AreNotAffectedByChanges_WhenAttributeIsUsed()
     {
         var root = new RootWithOptionalCollection()
         {
@@ -171,7 +172,7 @@ public class OneToManyRelationships : TestBase<ForceUnchangedDbContext>
     }
 
     [Test]
-    public async Task _05_HiddenOptionalReferenceNavigationValues_WithDefinedFk_AndPreviouslyTrackedBackreference_AreNotAffectedByChanges_WhenAttributeIsUsed()
+    public async Task _05_OptionalReferenceNavigationValues_WithDefinedFk_AndPreviouslyTrackedBackreference_AreNotAffectedByChanges_WhenAttributeIsUsed()
     {
         var root = new RootWithOptionalReferenceWithFkWithBackreference();
         var root2 = new RootWithOptionalReferenceWithFkWithBackreference();
@@ -226,7 +227,7 @@ public class OneToManyRelationships : TestBase<ForceUnchangedDbContext>
     }
     
     [Test]
-    public async Task _06_HiddenOptionalCollectionNavigationValues_WithDefinedFk_AndPreviouslyTrackedBackreference_AreNotAffectedByChanges_WhenAttributeIsUsed()
+    public async Task _06_OptionalCollectionNavigationValues_WithDefinedFk_AndPreviouslyTrackedBackreference_AreNotAffectedByChanges_WhenAttributeIsUsed()
     {
         var root = new RootWithOptionalCollectionWithFkWithBackreference();
 
@@ -280,6 +281,53 @@ public class OneToManyRelationships : TestBase<ForceUnchangedDbContext>
                 .SingleAsync(i => i.Id == optionalItemUpdate.Id);
             
             Assert.That(optionalItemFromDb.Root, Is.Not.Null);
+        }
+    }
+    
+    [Test]
+    public async Task _07_OptionalReferenceNavigationValues_InOneToManyRelationship_InsideOwnedType_AreNotAffectedByChanges_WhenAttributeIsUsed()
+    {
+        var rootInit = new RootWithOwnedType()
+        {
+            Id = 1,
+            Owned = new()
+            {
+                OptionalItem = new()
+            }
+        };
+        
+        await using (var dbContext = new ForceUnchangedDbContext())
+        {
+            dbContext.Add(rootInit);
+            await dbContext.SaveChangesAsync();
+        }
+        
+        Assert.That(rootInit.Id, Is.GreaterThan(0));
+        Assert.That(rootInit.Owned.OptionalItem.Id, Is.GreaterThan(0));
+
+        var rootUpdate = new RootWithOwnedType()
+        {
+            Id = rootInit.Id,
+            Owned = new()
+            {
+                OptionalItem = null
+            }
+        };
+        
+        await using (var dbContext = new ForceUnchangedDbContext())
+        {
+            var graphTracker = GetGraphTrackerInstance(dbContext);
+            await graphTracker.TrackGraphAsync(rootUpdate);
+            await dbContext.SaveChangesAsync();
+        }
+
+        await using (var dbContext = new ForceUnchangedDbContext())
+        {
+            var updateFromDb = await dbContext.Set<RootWithOwnedType>()
+                .Include(x => x.Owned.OptionalItem)
+                .SingleAsync(x => x.Id == rootInit.Id);
+            
+            Assert.That(updateFromDb.Owned.OptionalItem, Is.Not.Null);
         }
     }
 

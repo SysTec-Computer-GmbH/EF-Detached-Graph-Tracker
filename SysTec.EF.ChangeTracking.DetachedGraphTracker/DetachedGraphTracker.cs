@@ -80,7 +80,7 @@ public class DetachedGraphTracker
 
         if (!hasExistingCompositionInChangeTracker && !node.IsAssociation())
         {
-            EntityEntryStateHelper.SetStateDependingOnKeyValue(node.Entry);
+            SetNodeEntryState(node);
             NavigationEntryHelper.KeepUnchangedStateForForceUnchangedNavigations(node);
             NavigationEntryHelper.SeverRelationshipsForNullValuesInReferenceNavigations(node);
         }
@@ -91,6 +91,20 @@ public class DetachedGraphTracker
 
         _changeTrackingHandler.AddTrackedEntity(node);
         _collectionNavigationUpdateHandler.PrepareListUpdateHandling(node);
+    }
+
+    private static void SetNodeEntryState(EntityEntryGraphNode node)
+    {
+        // If the node is owned, the state of the entry must be set to the state of the source entry.
+        if (node.Entry.Metadata.IsOwned())
+        {
+            // Source entry cannot be null, because an owned type cannot be the root entity.
+            node.Entry.State = node.SourceEntry!.State;
+        }
+        else
+        {
+            EntityEntryStateHelper.SetStateDependingOnKeyValue(node.Entry);
+        }
     }
 
     private void Cleanup()
