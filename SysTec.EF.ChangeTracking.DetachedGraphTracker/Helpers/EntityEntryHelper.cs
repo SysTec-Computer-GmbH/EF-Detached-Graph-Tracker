@@ -30,6 +30,7 @@ internal static class EntityEntryHelper
     ///     Implementation of IsKeySet property with support for composite keys.
     ///     If more than one key property exists, the entity is considered to have a composite key.
     ///     In this case, the database is queried to check if the entity already exists.
+    ///     If a primary key is a nullable type like a string, the database also needs to be queried to check if the entity already exists.
     ///     If the database query returns data, the entity is considered to have a key set. Otherwise not.
     ///     If no composite Key exists, the default implementation of IsKeySet is used.
     /// </summary>
