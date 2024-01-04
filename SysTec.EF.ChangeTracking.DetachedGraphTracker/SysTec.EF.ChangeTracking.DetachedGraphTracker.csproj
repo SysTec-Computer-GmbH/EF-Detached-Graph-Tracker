@@ -7,11 +7,10 @@
         <RootNamespace>SysTec.EF.ChangeTracking.DetachedGraphTracker</RootNamespace>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageId>SysTec.EF.ChangeTracking.DetachedGraphTracker</PackageId>
-        <Version>7.0.1</Version>
+        <Version>7.0.2</Version>
         <Title>Detached Graph Tracker</Title>
         <Authors>Tobias Theiss (SysTec Computer GmbH)</Authors>
-        <PackageReleaseNotes>Breaking Change:
-Renamed ForceAggregationAttribute -&gt; UpdateAssociationOnlyAttribute</PackageReleaseNotes>
+        <PackageReleaseNotes>Bugfix: Owned reference nodes are now tracked in the correct state. Before they were always tracked as Added.</PackageReleaseNotes>
         <Description>A library to support easier change tracking of a complex detached graph with EF-Core.
 Provides features like automatic identity resolution, automatically severing relationships for missing items in collections and handling of associations (associating entity relationships without allowing updates to the entity in a tree)</Description>
         <PackageProjectUrl>https://github.com/SysTec-Computer-GmbH/EF-Detached-Graph-Tracker</PackageProjectUrl>
