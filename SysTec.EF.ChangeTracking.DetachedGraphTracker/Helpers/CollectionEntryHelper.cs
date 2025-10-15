@@ -32,9 +32,7 @@ internal static class CollectionEntryHelper
         ThrowHelper.ThrowIfIsOwnedCollectionEntry(collectionEntry);
 
         var query = collectionEntry.Query().Cast<object>();
-        // AsSingleQuery must be used, because otherwise a NullReferenceException is thrown when the collection is part of a M:N relationship
-        // https://github.com/dotnet/efcore/issues/32225
-        return await query.AsSingleQuery().IgnoreAutoIncludes().ToListAsync();
+        return await query.IgnoreAutoIncludes().ToListAsync();
     }
     
     private static bool NavigationContainsEntity(NavigationEntry navigationEntry, object entity)

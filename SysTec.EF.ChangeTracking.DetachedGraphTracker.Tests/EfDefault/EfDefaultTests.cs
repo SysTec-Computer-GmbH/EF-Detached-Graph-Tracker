@@ -633,7 +633,7 @@ public class EfDefaultTests : TestBase<EfDefaultDbContext>
 
     [Test]
     [Category("Unexpected Behavior")]
-    public async Task _15_ShowcaseExplicitLoad_OfManyToManyCollection_ThrowsError()
+    public async Task _15_ShowcaseExplicitLoad_OfManyToManyCollection_DoesNotThrowError()
     {
         var manyItem = new EfDefaultManyItemOne
         {
@@ -653,8 +653,8 @@ public class EfDefaultTests : TestBase<EfDefaultDbContext>
         {
             var manyItemFromDb = await dbContext.ManyItems.SingleAsync(i => i.Id == manyItem.Id);
             var query = dbContext.Entry(manyItemFromDb).Collection(s => s.Items).Query();
-            // WHY THE FUCK DOES LOADING A M:N COLLECTION NAVIGATION CAUSE A NULL REFERENCE EXCEPTION WHEN USING SPLIT QUERY???
-            Assert.ThrowsAsync<NullReferenceException>(async () => await query.AsSplitQuery().ToListAsync());
+            // EF Issue 32225 https://github.com/dotnet/efcore/issues/32225 should be fixed now.
+            Assert.DoesNotThrowAsync(async () => await query.AsSplitQuery().ToListAsync());
         }
     }
 
